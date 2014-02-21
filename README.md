@@ -22,7 +22,9 @@ There are a few regressions compared to assertions from TestCase:
 * asserts does not support the addTypeEqualityFunc() functionality.
 
 
-Usage: ```python
+Usage:
+
+```python
 from asserts import assert_true, assert_equal
 
 my_var = 13
