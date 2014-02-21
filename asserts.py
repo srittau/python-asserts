@@ -13,7 +13,7 @@ import re
 
 def fail(msg=None):
     """Raise an AssertionError with the given message."""
-    raise AssertionError(msg)
+    raise AssertionError(msg or "assertion failure")
 
 
 def assert_true(expr, msg=None):
@@ -74,15 +74,16 @@ def assert_not_equal(first, second, msg=None):
 
 def assert_almost_equal(first, second, places=7, msg=None):
     """Fail if the two objects are unequal when rounded."""
-    if round(second - first, places) != 0:
+    if round(second - first, places):
         fail(msg or "{!r} != {!r} within {} places".format(first, second,
                                                            places))
 
 
 def assert_regex(text, regex, msg=None):
     """Fail if actual does not match the regular expression expected."""
-    if not re.match(regex, text):
-        fail(msg or "{!r} does not match {!r}".format(text, regex))
+    compiled = re.compile(regex)
+    if not compiled.search(text):
+        fail(msg or "{!r} does not match {!r}".format(text, compiled.pattern))
 
 
 def assert_is(first, second, msg=None):
@@ -121,31 +122,32 @@ def assert_is_instance(obj, cls, msg=None):
         msg = (msg if msg is not None else
                repr(obj) + " is of " + repr(obj.__class__) +
                " not of " + repr(cls))
-        raise AssertionError(msg)
+        fail(msg)
 
 
-def assert_has_attr(obj, attribute):
+def assert_has_attr(obj, attribute, msg=None):
     if not hasattr(obj, attribute):
-        raise AssertionError(repr(obj) + " is missing attribute '" +
-                             attribute + "'")
+        fail(msg or repr(obj) + " is missing attribute '" + attribute + "'")
 
 
 _EPSILON_SECONDS = 5
 
 
-def assert_datetime_about_now(actual):
+def assert_datetime_about_now(actual, msg=None):
     now = datetime.now()
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
-    msg = repr(actual) + " is not close to current " + repr(now)
+    if not msg:
+        msg = repr(actual) + " is not close to current " + repr(now)
     assert_between(lower_bound, upper_bound, actual, msg)
 
 
-def assert_datetime_about_now_utc(actual):
+def assert_datetime_about_now_utc(actual, msg=None):
     now = datetime.utcnow()
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
-    msg = repr(actual) + " is not close to current UTC " + repr(now)
+    if not msg:
+        msg = repr(actual) + " is not close to current UTC " + repr(now)
     assert_between(lower_bound, upper_bound, actual, msg)
 
 
@@ -173,16 +175,16 @@ class AssertRaisesContext(object):
         """Add a test callback.
 
         This callback is called after determining that the right exception
-        class was thrown.
+        class was raised.
 
         """
         self._tests.append(cb)
 
 
 def assert_raises(exception, msg=None):
-    """Fail unless a specific exception is thrown inside the context.
+    """Fail unless a specific exception is raised inside the context.
 
-    If a different type of exception is thrown, it will not be caught.
+    If a different type of exception is raised, it will not be caught.
 
     """
     return AssertRaisesContext(exception, msg)
@@ -205,7 +207,7 @@ def assert_raises_regex(exception, regex, msg=None):
 
 
 def assert_raises_errno(exception, errno, msg=None):
-    """Fail unless the context throws an exception of class exc_cls and
+    """Fail unless the context raises an exception of class exc_cls and
     its errno attribute equals the supplied one.
 
     """
@@ -217,7 +219,7 @@ def assert_raises_errno(exception, errno, msg=None):
     return context
 
 
-def assert_succeeds(exception):
+def assert_succeeds(exception, msg=None):
     """Fail if an exception of the provided type is raised within the context.
 
     This assertion should be used for cases, where successfully running a
@@ -249,6 +251,6 @@ def assert_succeeds(exception):
 
         def __exit__(self, exc_type, exc_val, exc_tb):
             if exc_type and issubclass(exc_type, exception):
-                fail(exception.__name__ + " was unexpectedly raised")
+                fail(msg or exception.__name__ + " was unexpectedly raised")
 
     return _AssertSucceeds()
