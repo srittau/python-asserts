@@ -35,12 +35,6 @@ class _DummyObject(object):
     def __init__(self, value="x"):
         self.value = value
 
-    def __eq__(self, other):
-        return self.value == other.value
-
-    def __hash__(self):
-        return hash(self.value)
-
     def __repr__(self):
         return "<Dummy>"
 
@@ -379,12 +373,12 @@ class AssertTest(TestCase):
         with assert_raises(AssertionError):
             assert_datetime_about_now_utc(then)
 
-    def assert_datetime_about_now_utc__default_message(self):
+    def test_assert_datetime_about_now_utc__default_message(self):
         then = datetime(1990, 4, 13, 12, 30, 15)
         expected_message = (
             r"datetime.datetime\(1990, 4, 13, 12, 30, 15\) "
             r"is not close to current UTC "
-            r"datetime.datetime\(\d+, \d+, \d+, \d+, \d+, \d+\)$")
+            r"datetime.datetime\(\d+, \d+, \d+, \d+, \d+, \d+, \d+\)$")
         with assert_raises_regex(AssertionError, expected_message):
             assert_datetime_about_now_utc(then)
 
