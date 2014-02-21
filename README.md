@@ -25,7 +25,7 @@ There are a few regressions compared to assertions from TestCase:
 Usage:
 
 ```python
-from asserts import assert_true, assert_equal
+from asserts import assert_true, assert_equal, assert_raises
 
 my_var = 13
 assert_equal(13, my_var)
