@@ -136,7 +136,7 @@ class AssertTest(TestCase):
             assert_is_not_none("")
 
     def test_assert_is_not_none__none__default_message(self):
-        with _assert_raises_assertion("expected value not to be None"):
+        with _assert_raises_assertion("expression is None"):
             assert_is_not_none(None)
 
     def test_assert_is_not_none__none__custom_message(self):
@@ -257,7 +257,7 @@ class AssertTest(TestCase):
         assert_is_not(x, y)
 
     def test_assert_is_not__same__default_message(self):
-        with _assert_raises_assertion("expected value not to be 5"):
+        with _assert_raises_assertion("both arguments refer to 5"):
             assert_is_not(5, 5)
 
     def test_assert_is_not__same__custom_message(self):
@@ -303,8 +303,11 @@ class AssertTest(TestCase):
     def test_assert_is_instance__is_instance(self):
         assert_is_instance(4, int)
 
+    def test_assert_is_instance__is_instance__multiple_classes(self):
+        assert_is_instance(4, (str, int))
+
     def test_assert_is_instance__is_sub_class(self):
-        assert_is_instance(IOError(), Exception)
+        assert_is_instance(OSError(), Exception)
 
     def test_assert_is_instance__not_instance__default_message(self):
         expected_message = ("'my string' is of <class 'str'>, "
@@ -325,7 +328,7 @@ class AssertTest(TestCase):
 
     def test_assert_has_attr__does_not_have_attribute__default_message(self):
         d = _DummyObject()
-        with _assert_raises_assertion("<Dummy> is missing attribute 'foo'"):
+        with _assert_raises_assertion("<Dummy> does not have attribute 'foo'"):
             assert_has_attr(d, "foo")
 
     def test_assert_has_attr__does_not_have_attribute__custom_message(self):
@@ -349,9 +352,7 @@ class AssertTest(TestCase):
     def test_assert_datetime_about_now__default_message(self):
         then = datetime(1990, 4, 13, 12, 30, 15)
         expected_message = (r"^datetime.datetime\(1990, 4, 13, 12, 30, 15\) "
-                            "is not close to current "
-                            "datetime.datetime"
-                            "\(\d+, \d+, \d+, \d+, \d+, \d+, \d+\)$")
+                            "is not close to current date/time$")
         with assert_raises_regex(AssertionError, expected_message):
             assert_datetime_about_now(then)
 
@@ -377,8 +378,7 @@ class AssertTest(TestCase):
         then = datetime(1990, 4, 13, 12, 30, 15)
         expected_message = (
             r"datetime.datetime\(1990, 4, 13, 12, 30, 15\) "
-            r"is not close to current UTC "
-            r"datetime.datetime\(\d+, \d+, \d+, \d+, \d+, \d+, \d+\)$")
+            r"is not close to current UTC date/time$")
         with assert_raises_regex(AssertionError, expected_message):
             assert_datetime_about_now_utc(then)
 
