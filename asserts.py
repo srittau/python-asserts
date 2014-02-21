@@ -20,7 +20,7 @@ def assert_true(expr, msg=None):
     """Fail the test unless the expression is truthy."""
     if not expr:
         if not msg:
-            msg = repr(expr) + " is not true"
+            msg = repr(expr) + " is not truthy"
         fail(msg)
 
 
@@ -28,30 +28,28 @@ def assert_false(expr, msg=None):
     """Fail the test unless the expression is falsy."""
     if expr:
         if not msg:
-            msg = repr(expr) + " is not false"
+            msg = repr(expr) + " is not falsy"
         fail(msg)
 
 
 def assert_boolean_true(expr, msg=None):
     """Fail the test unless the expression is the constant True."""
-    assert_is(True, expr, msg)
+    assert_is(expr, True, msg)
 
 
 def assert_boolean_false(expr, msg=None):
     """Fail the test unless the expression is the constant False."""
-    assert_is(False, expr, msg)
+    assert_is(expr, False, msg)
 
 
 def assert_is_none(expr, msg=None):
     """Fail if actual is not None."""
-    if expr is not None:
-        fail(msg or "{!r} is not None".format(expr))
+    assert_is(expr, None, msg)
 
 
 def assert_is_not_none(expr, msg=None):
     """Fail if actual is None."""
-    if expr is None:
-        fail(msg or "{!r} is None".format(expr))
+    assert_is_not(expr, None, msg)
 
 
 def assert_equal(first, second, msg=None):
@@ -105,7 +103,7 @@ def assert_is(first, second, msg=None):
 def assert_is_not(first, second, msg=None):
     """Fail if the two objects are the same object."""
     if first is second:
-        fail(msg or "{!r} is {!r}".format(first, second))
+        fail(msg or "expected value not to be {!r}".format(first))
 
 
 def assert_in(first, second, msg=None):
@@ -131,7 +129,7 @@ def assert_is_instance(obj, cls, msg=None):
     if not isinstance(obj, cls):
         msg = (msg if msg is not None else
                repr(obj) + " is of " + repr(obj.__class__) +
-               " not of " + repr(cls))
+               ", expected " + repr(cls))
         fail(msg)
 
 
@@ -223,7 +221,8 @@ def assert_raises_errno(exception, errno, msg=None):
     """
 
     def check_errno(exc):
-        assert_equal(errno, exc.errno, msg)
+        if errno != exc.errno:
+            fail(msg or "wrong errno: {!r} != {!r}".format(errno, exc.errno))
     context = AssertRaisesContext(exception, msg)
     context.add_test(check_errno)
     return context

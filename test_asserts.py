@@ -87,7 +87,7 @@ class AssertTest(TestCase):
         assert_true("Hello World!")
 
     def test_assert_true__falsy_value__default_message(self):
-        with _assert_raises_assertion("'' is not true"):
+        with _assert_raises_assertion("'' is not truthy"):
             assert_true("")
 
     def test_assert_true__falsy_value__custom_message(self):
@@ -98,7 +98,7 @@ class AssertTest(TestCase):
         assert_false("")
 
     def test_assert_false__truthy_value__default_message(self):
-        with _assert_raises_assertion("25 is not false"):
+        with _assert_raises_assertion("25 is not falsy"):
             assert_false(25)
 
     def test_assert_false__truthy_value__custom_message(self):
@@ -113,15 +113,15 @@ class AssertTest(TestCase):
             assert_boolean_true(False, msg="test message")
 
     def test_assert_boolean_true__truthy__default_message(self):
-        with _assert_raises_assertion("True is not 1"):
+        with _assert_raises_assertion("1 is not True"):
             assert_boolean_true(1)
 
     def test_assert_boolean_false__false(self):
         assert_boolean_false(False)
 
     def test_assert_boolean_false__true__default_message(self):
-        with _assert_raises_assertion("False is not True"):
-            assert_boolean_false(True)
+        with _assert_raises_assertion("'foo' is not False"):
+            assert_boolean_false("foo")
 
     def test_assert_boolean_false__falsy__custom_message(self):
         with _assert_raises_assertion("test message"):
@@ -142,7 +142,7 @@ class AssertTest(TestCase):
             assert_is_not_none("")
 
     def test_assert_is_not_none__none__default_message(self):
-        with _assert_raises_assertion("None is None"):
+        with _assert_raises_assertion("expected value not to be None"):
             assert_is_not_none(None)
 
     def test_assert_is_not_none__none__custom_message(self):
@@ -234,7 +234,7 @@ class AssertTest(TestCase):
             assert_regex("This is a test text", "XXX")
 
     def test_assert_regex__does_not_match_regex__default_message(self):
-        regex = re.compile("XXX")
+        regex = re.compile(r"XXX")
         with _assert_raises_assertion(
                 "'This is a test text' does not match 'XXX'"):
             assert_regex("This is a test text", regex)
@@ -263,7 +263,7 @@ class AssertTest(TestCase):
         assert_is_not(x, y)
 
     def test_assert_is_not__same__default_message(self):
-        with _assert_raises_assertion("5 is 5"):
+        with _assert_raises_assertion("expected value not to be 5"):
             assert_is_not(5, 5)
 
     def test_assert_is_not__same__custom_message(self):
@@ -313,8 +313,8 @@ class AssertTest(TestCase):
         assert_is_instance(IOError(), Exception)
 
     def test_assert_is_instance__not_instance__default_message(self):
-        expected_message = ("'my string' is of <class 'str'> "
-                            "not of <class 'int'>")
+        expected_message = ("'my string' is of <class 'str'>, "
+                            "expected <class 'int'>")
         if sys.version_info[0] < 3:
             expected_message = expected_message.replace("class", "type")
         with _assert_raises_assertion(expected_message):
@@ -452,7 +452,7 @@ class AssertTest(TestCase):
             raise AssertionError("WrongClass was not raised")
 
     def test_assert_raises_errno__wrong_errno__default_message(self):
-        with _assert_raises_assertion("20 != 1"):
+        with _assert_raises_assertion("wrong errno: 20 != 1"):
             with assert_raises_errno(OSError, 20):
                 raise OSError(1, "Test error")
 
