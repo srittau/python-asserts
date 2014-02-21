@@ -180,12 +180,26 @@ class AssertTest(TestCase):
     def test_assert_almost_equal__same(self):
         assert_almost_equal(5, 5)
 
-    def test_assert_almost_equal__similar(self):
+    def test_assert_almost_equal__similar__defaults(self):
+        assert_almost_equal(5, 5.00000001)
+
+    def test_assert_almost_equal__similar__places(self):
         assert_almost_equal(5, 5.0001, places=3)
+
+    def test_assert_almost_equal__similar__delta(self):
+        assert_almost_equal(5, 5.001, delta=0.1)
 
     def test_assert_almost_equal__not_similar__default_message(self):
         with _assert_raises_assertion("5 != 5.0001 within 7 places"):
             assert_almost_equal(5, 5.0001)
+
+    def test_assert_almost_equal__not_similar__places__default_message(self):
+        with _assert_raises_assertion("5 != 6 within 3 places"):
+            assert_almost_equal(5, 6, places=3)
+
+    def test_assert_almost_equal__not_similar__delta__default_message(self):
+        with _assert_raises_assertion("5 != 6 with delta=0.1"):
+            assert_almost_equal(5, 6, delta=0.1)
 
     def test_assert_almost_equal__not_similar__custom_message(self):
         with _assert_raises_assertion("test message"):
@@ -194,6 +208,14 @@ class AssertTest(TestCase):
     def test_assert_almost_equal__wrong_types(self):
         try:
             assert_almost_equal("5", "5")
+        except TypeError:
+            pass
+        else:
+            raise AssertionError("TypeError not raised")
+
+    def test_assert_almost_equal__places_and_delta(self):
+        try:
+            assert_almost_equal(5, 5, places=3, delta=0.0003)
         except TypeError:
             pass
         else:

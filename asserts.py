@@ -72,11 +72,21 @@ def assert_not_equal(first, second, msg=None):
         fail(msg or "{!r} == {!r}".format(first, second))
 
 
-def assert_almost_equal(first, second, places=7, msg=None):
+def assert_almost_equal(first, second, places=None, msg=None, delta=None):
     """Fail if the two objects are unequal when rounded."""
-    if round(second - first, places):
-        fail(msg or "{!r} != {!r} within {} places".format(first, second,
-                                                           places))
+    if delta is not None and places is not None:
+        raise TypeError("'places' and 'delta' are mutually exclusive")
+    if delta is not None:
+        diff = second - first
+        success = diff < delta
+        detail_msg = "with delta={}".format(delta)
+    else:
+        if places is None:
+            places = 7
+        success = not round(second - first, places)
+        detail_msg = "within {} places".format(places)
+    if not success:
+        fail(msg or "{!r} != {!r} ".format(first, second) + detail_msg)
 
 
 def assert_regex(text, regex, msg=None):
