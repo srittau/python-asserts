@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name="asserts",
-    version="0.5",
+    version="0.6",
     description="Rich Assertions",
     author="Sebastian Rittau",
     author_email="srittau@rittau.biz",
