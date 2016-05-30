@@ -1,7 +1,7 @@
 Python Asserts
 ==============
 
-Rich Assertions for Python
+Stand-alone Assertions for Python
 
 This package provides a few advantages over the assertions provided by
 unittest.TestCase:
