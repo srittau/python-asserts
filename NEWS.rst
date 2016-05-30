@@ -1,6 +1,9 @@
 Version 0.6
 ===========
 
+* assert_datetime_about_now()/assert_datetime_about_now_utc(): Handle
+  comparison with None more gracefully.
+
 Version 0.5.1
 =============
 

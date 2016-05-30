@@ -339,6 +339,16 @@ class AssertTest(TestCase):
     def test_assert_datetime_about_now__close(self):
         assert_datetime_about_now(datetime.now())
 
+    def test_assert_datetime_about_now__none__default_message(self):
+        expected_message = r"^None is not a valid date/time$"
+        with assert_raises_regex(AssertionError, expected_message):
+            assert_datetime_about_now(None)
+
+    def test_assert_datetime_about_now__none__custom_message(self):
+        expected_message = r"^test message$"
+        with assert_raises_regex(AssertionError, expected_message):
+            assert_datetime_about_now(None, msg="test message")
+
     def test_assert_datetime_about_now__too_low(self):
         then = datetime.now() - timedelta(minutes=1)
         with assert_raises(AssertionError):
@@ -351,8 +361,9 @@ class AssertTest(TestCase):
 
     def test_assert_datetime_about_now__default_message(self):
         then = datetime(1990, 4, 13, 12, 30, 15)
-        expected_message = (r"^datetime.datetime\(1990, 4, 13, 12, 30, 15\) "
-                            "is not close to current date/time$")
+        expected_message = (
+            r"^datetime.datetime\(1990, 4, 13, 12, 30, 15\) "
+            "is not close to current date/time$")
         with assert_raises_regex(AssertionError, expected_message):
             assert_datetime_about_now(then)
 
@@ -363,6 +374,16 @@ class AssertTest(TestCase):
 
     def test_assert_datetime_about_now_utc__close(self):
         assert_datetime_about_now_utc(datetime.utcnow())
+
+    def test_assert_datetime_about_now_utc__none__default_message(self):
+        expected_message = r"^None is not a valid date/time$"
+        with assert_raises_regex(AssertionError, expected_message):
+            assert_datetime_about_now_utc(None)
+
+    def test_assert_datetime_about_now_utc__none__custom_message(self):
+        expected_message = r"^test message$"
+        with assert_raises_regex(AssertionError, expected_message):
+            assert_datetime_about_now_utc(None, msg="test message")
 
     def test_assert_datetime_about_now_utc__too_low(self):
         then = datetime.utcnow() - timedelta(minutes=1)

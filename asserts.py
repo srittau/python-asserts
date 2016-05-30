@@ -323,10 +323,14 @@ def assert_datetime_about_now(actual, msg=None):
     AssertionError: datetime.datetime(1900, 1, 1, 12, 0) is not close to current date/time
 
     """
+    if actual is None:
+        if msg is None:
+            msg = "None is not a valid date/time"
+        raise AssertionError(msg)
     now = datetime.now()
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
-    if not msg:
+    if msg is None:
         msg = "{!r} is not close to current date/time".format(actual)
     assert_between(lower_bound, upper_bound, actual, msg)
 
@@ -341,6 +345,10 @@ def assert_datetime_about_now_utc(actual, msg=None):
     AssertionError: datetime.datetime(1900, 1, 1, 12, 0) is not close to current UTC date/time
 
     """
+    if actual is None:
+        if msg is None:
+            msg = "None is not a valid date/time"
+        raise AssertionError(msg)
     now = datetime.utcnow()
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
