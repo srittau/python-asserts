@@ -346,13 +346,28 @@ def assert_is_instance(obj, cls, msg=None):
     >>> assert_is_instance(5, str)
     Traceback (most recent call last):
         ...
-    AssertionError: 5 is of <class 'int'>, expected <class 'str'>
+    AssertionError: 5 is an instance of <class 'int'>, expected <class 'str'>
 
     """
     if not isinstance(obj, cls):
-        msg = (msg if msg is not None else
-               repr(obj) + " is of " + repr(obj.__class__) +
-               ", expected " + repr(cls))
+        msg = (msg or "{!r} is an instance of {!r}, expected {!r}".format(
+            obj, obj.__class__, cls))
+        fail(msg)
+
+
+def assert_not_is_instance(obj, cls, msg=None):
+    """Fail if an object is an instance of a class or tuple of classes.
+
+    >>> assert_not_is_instance(5, str)
+    >>> assert_not_is_instance(5, (str, bytes))
+    >>> assert_not_is_instance('foo', str)
+    Traceback (most recent call last):
+        ...
+    AssertionError: 'foo' is an instance of <class 'str'>
+
+    """
+    if isinstance(obj, cls):
+        msg = msg or "{!r} is an instance of {!r}".format(obj, obj.__class__)
         fail(msg)
 
 

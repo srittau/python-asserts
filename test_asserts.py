@@ -25,6 +25,7 @@ from asserts import (
     assert_not_in,
     assert_regex,
     assert_is_instance,
+    assert_not_is_instance,
     assert_has_attr,
     assert_datetime_about_now,
     assert_datetime_about_now_utc,
@@ -341,26 +342,36 @@ class AssertTest(TestCase):
         with _assert_raises_assertion("my message"):
             assert_between(0, 10, 11, msg="my message")
 
-    def test_assert_is_instance__is_instance(self):
+    def test_assert_is_instance(self):
         assert_is_instance(4, int)
-
-    def test_assert_is_instance__is_instance__multiple_classes(self):
         assert_is_instance(4, (str, int))
-
-    def test_assert_is_instance__is_sub_class(self):
         assert_is_instance(OSError(), Exception)
+        with _assert_raises_assertion("my message"):
+            assert_is_instance("my string", int, msg="my message")
 
-    def test_assert_is_instance__not_instance__default_message(self):
-        expected_message = ("'my string' is of <class 'str'>, "
-                            "expected <class 'int'>")
+    def test_assert_is_instance__default_message(self):
+        expected_message = (
+            "'my string' is an instance of <class 'str'>, "
+            "expected <class 'int'>")
         if sys.version_info[0] < 3:
             expected_message = expected_message.replace("class", "type")
         with _assert_raises_assertion(expected_message):
             assert_is_instance("my string", int)
 
-    def test_assert_is_instance__custom_message(self):
+    def test_assert_not_is_instance(self):
+        assert_not_is_instance(4, str)
+        assert_not_is_instance(4, (str, bytes))
         with _assert_raises_assertion("my message"):
-            assert_is_instance("my string", int, msg="my message")
+            assert_not_is_instance(OSError(), Exception, msg="my message")
+
+    def test_assert_not_is_instance__default_message(self):
+        expected_message = "OSError() is an instance of <class 'OSError'>"
+        if sys.version_info[0] < 3:
+            expected_message = expected_message.replace("class", "type")
+            expected_message = expected_message.replace(
+                "type 'OSError'", "type 'exceptions.OSError'")
+        with _assert_raises_assertion(expected_message):
+            assert_not_is_instance(OSError(), Exception)
 
     def test_assert_has_attr__has_attribute(self):
         d = _DummyObject()
