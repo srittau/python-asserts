@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name="asserts",
-    version="0.6",
+    version="0.7.0",
     description="Stand-alone Assertions",
     author="Sebastian Rittau",
     author_email="srittau@rittau.biz",
