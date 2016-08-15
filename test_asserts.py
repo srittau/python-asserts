@@ -3,31 +3,36 @@ import re
 from unittest import TestCase
 import sys
 
-from asserts import (fail,
-                     assert_true,
-                     assert_false,
-                     assert_boolean_true,
-                     assert_boolean_false,
-                     assert_is_none,
-                     assert_is_not_none,
-                     assert_equal,
-                     assert_not_equal,
-                     assert_almost_equal,
-                     assert_between,
-                     assert_is,
-                     assert_is_not,
-                     assert_in,
-                     assert_not_in,
-                     assert_regex,
-                     assert_is_instance,
-                     assert_has_attr,
-                     assert_datetime_about_now,
-                     assert_datetime_about_now_utc,
-                     assert_raises,
-                     assert_raises_regex,
-                     assert_raises_errno,
-                     assert_succeeds,
-                     )
+from asserts import (
+    fail,
+    assert_true,
+    assert_false,
+    assert_boolean_true,
+    assert_boolean_false,
+    assert_is_none,
+    assert_is_not_none,
+    assert_equal,
+    assert_not_equal,
+    assert_almost_equal,
+    assert_less,
+    assert_less_equal,
+    assert_greater,
+    assert_greater_equal,
+    assert_between,
+    assert_is,
+    assert_is_not,
+    assert_in,
+    assert_not_in,
+    assert_regex,
+    assert_is_instance,
+    assert_has_attr,
+    assert_datetime_about_now,
+    assert_datetime_about_now_utc,
+    assert_raises,
+    assert_raises_regex,
+    assert_raises_errno,
+    assert_succeeds,
+)
 
 
 class _DummyObject(object):
@@ -214,6 +219,42 @@ class AssertTest(TestCase):
             pass
         else:
             raise AssertionError("TypeError not raised")
+
+    def test_assert_less(self):
+        assert_less(4, 5)
+        with _assert_raises_assertion("5 is not less than 5"):
+            assert_less(5, 5)
+        with _assert_raises_assertion("'foo' is not less than 'bar'"):
+            assert_less('foo', 'bar')
+        with _assert_raises_assertion("test message"):
+            assert_less(6, 5, msg="test message")
+
+    def test_assert_less_equal(self):
+        assert_less_equal(4, 5)
+        assert_less_equal(5, 5)
+        with _assert_raises_assertion(
+                "'foo' is not less than or equal to 'bar'"):
+            assert_less_equal('foo', 'bar')
+        with _assert_raises_assertion("test message"):
+            assert_less_equal(6, 5, msg="test message")
+
+    def test_assert_greater(self):
+        assert_greater(5, 4)
+        with _assert_raises_assertion("5 is not greater than 5"):
+            assert_greater(5, 5)
+        with _assert_raises_assertion("'bar' is not greater than 'foo'"):
+            assert_greater('bar', 'foo')
+        with _assert_raises_assertion("test message"):
+            assert_greater(5, 5, msg="test message")
+
+    def test_assert_greater_equal(self):
+        assert_greater_equal(5, 4)
+        assert_greater_equal(5, 5)
+        with _assert_raises_assertion(
+                "'bar' is not greater than or equal to 'foo'"):
+            assert_greater_equal('bar', 'foo')
+        with _assert_raises_assertion("test message"):
+            assert_greater_equal(5, 6, msg="test message")
 
     def test_assert_regex__matches_string(self):
         assert_regex("This is a test text", "is.*test")

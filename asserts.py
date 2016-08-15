@@ -183,6 +183,66 @@ def assert_almost_equal(first, second, places=None, msg=None, delta=None):
         fail(msg or "{!r} != {!r} ".format(first, second) + detail_msg)
 
 
+def assert_less(first, second, msg=None):
+    """Fail if first is not less than second.
+
+    >>> assert_less('bar', 'foo')
+    >>> assert_less(5, 5)
+    Traceback (most recent call last):
+        ...
+    AssertionError: 5 is not less than 5
+
+    """
+    if not first < second:
+        fail(msg or "{!r} is not less than {!r}".format(first, second))
+
+
+def assert_less_equal(first, second, msg=None):
+    """Fail if first is not less than or equal to second.
+
+    >>> assert_less_equal('bar', 'foo')
+    >>> assert_less_equal(5, 5)
+    >>> assert_less_equal(6, 5)
+    Traceback (most recent call last):
+        ...
+    AssertionError: 6 is not less than or equal to 5
+
+    """
+    if not first <= second:
+        fail(msg or "{!r} is not less than or equal to {!r}".format(
+            first, second))
+
+
+def assert_greater(first, second, msg=None):
+    """Fail if first is not greater than second.
+
+    >>> assert_greater('foo', 'bar')
+    >>> assert_greater(5, 5)
+    Traceback (most recent call last):
+        ...
+    AssertionError: 5 is not greater than 5
+
+    """
+    if not first > second:
+        fail(msg or "{!r} is not greater than {!r}".format(first, second))
+
+
+def assert_greater_equal(first, second, msg=None):
+    """Fail if first is not greater than or equal to second.
+
+    >>> assert_greater_equal('foo', 'bar')
+    >>> assert_greater_equal(5, 5)
+    >>> assert_greater_equal(5, 6)
+    Traceback (most recent call last):
+        ...
+    AssertionError: 5 is not greater than or equal to 6
+
+    """
+    if not first >= second:
+        fail(msg or "{!r} is not greater than or equal to {!r}".format(
+            first, second))
+
+
 def assert_regex(text, regex, msg=None):
     """Fail if text does not match the regular expression.
 
