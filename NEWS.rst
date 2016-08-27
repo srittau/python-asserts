@@ -1,6 +1,8 @@
 Version 0.7.0
 =============
 
+* add assert_equal_items()
+
 Version 0.6
 ===========
 

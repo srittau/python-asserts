@@ -321,6 +321,55 @@ def assert_not_in(first, second, msg=None):
     assert_false(first in second, msg)
 
 
+def assert_equal_items(sequence1, sequence2):
+    """Compare the items of two sequences, ignoring order.
+
+    >>> assert_equal_items([1, 2], {2, 1})
+
+    Items missing in either sequence will be listed:
+
+    >>> assert_equal_items(["a", "b", "c"], ["a", "d"])
+    Traceback (most recent call last):
+        ...
+    AssertionError: missing from sequence 1: 'd'; missing from sequence 2: 'b', 'c'
+
+    Items are counted in each sequence. This makes it useful to detect
+    duplicates:
+
+    >>> assert_equal_items({"a", "b"}, ["a", "a", "b"])
+    Traceback (most recent call last):
+        ...
+    AssertionError: missing from sequence 1: 'a'
+
+    """
+
+    def compare():
+        missing1 = list(sequence2)
+        missing2 = []
+        for item in sequence1:
+            try:
+                missing1.remove(item)
+            except ValueError:
+                missing2.append(item)
+        return missing1, missing2
+
+    def build_message():
+        msg = ""
+        if missing_from_1:
+            msg += "missing from sequence 1: " + ", ".join(
+                repr(i) for i in missing_from_1)
+        if missing_from_1 and missing_from_2:
+            msg += "; "
+        if missing_from_2:
+            msg += "missing from sequence 2: " + ", ".join(
+                repr(i) for i in missing_from_2)
+        return msg
+
+    missing_from_1, missing_from_2 = compare()
+    if missing_from_1 or missing_from_2:
+        raise AssertionError(build_message())
+
+
 def assert_between(lower_bound, upper_bound, expr, msg=None):
     """Fail if an expression is not between certain bounds (inclusive).
 

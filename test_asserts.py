@@ -23,6 +23,7 @@ from asserts import (
     assert_is_not,
     assert_in,
     assert_not_in,
+    assert_equal_items,
     assert_regex,
     assert_is_instance,
     assert_not_is_instance,
@@ -328,6 +329,39 @@ class AssertTest(TestCase):
     def test_assert_not_in__does_contain__custom_message(self):
         with _assert_raises_assertion("my message"):
             assert_not_in("foo", ["foo", "bar", "baz"], "my message")
+
+    def test_assert_equal_items__equal(self):
+        with assert_succeeds(AssertionError):
+            assert_equal_items(["a"], ["a"])
+
+    def test_assert_equal_items__equal_differing_types(self):
+        with assert_succeeds(AssertionError):
+            assert_equal_items(["a"], {"a"})
+
+    def test_assert_equal_items__ignore_order(self):
+        with assert_succeeds(AssertionError):
+            assert_equal_items(["a", "b"], ["b", "a"])
+
+    def test_assert_equal_items__missing_from_sequence1(self):
+        with _assert_raises_assertion("missing from sequence 1: 'a'"):
+            assert_equal_items([], {"a"})
+
+    def test_assert_equal_items__multiple_missing_from_sequence1(self):
+        with _assert_raises_assertion("missing from sequence 1: 'b', 'c'"):
+            assert_equal_items(["a"], ["a", "b", "c"])
+
+    def test_assert_equal_items__respect_duplicates(self):
+        with _assert_raises_assertion("missing from sequence 1: 'a'"):
+            assert_equal_items({"a"}, ["a", "a"])
+
+    def test_assert_equal_items__missing_from_sequence2(self):
+        with _assert_raises_assertion("missing from sequence 2: 'a', 'c'"):
+            assert_equal_items(["a", "b", "c"], ["b"])
+
+    def test_assert_equal_items__missing_from_both(self):
+        msg = "missing from sequence 1: 'd'; missing from sequence 2: 'b', 'c'"
+        with _assert_raises_assertion(msg):
+            assert_equal_items(["a", "b", "c"], ["a", "d"])
 
     def test_assert_between__within_range(self):
         assert_between(0, 10, 0)
