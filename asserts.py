@@ -321,14 +321,14 @@ def assert_not_in(first, second, msg=None):
     assert_false(first in second, msg)
 
 
-def assert_equal_items(sequence1, sequence2):
+def assert_count_equal(sequence1, sequence2):
     """Compare the items of two sequences, ignoring order.
 
-    >>> assert_equal_items([1, 2], {2, 1})
+    >>> assert_count_equal([1, 2], {2, 1})
 
     Items missing in either sequence will be listed:
 
-    >>> assert_equal_items(["a", "b", "c"], ["a", "d"])
+    >>> assert_count_equal(["a", "b", "c"], ["a", "d"])
     Traceback (most recent call last):
         ...
     AssertionError: missing from sequence 1: 'd'; missing from sequence 2: 'b', 'c'
@@ -336,7 +336,7 @@ def assert_equal_items(sequence1, sequence2):
     Items are counted in each sequence. This makes it useful to detect
     duplicates:
 
-    >>> assert_equal_items({"a", "b"}, ["a", "a", "b"])
+    >>> assert_count_equal({"a", "b"}, ["a", "a", "b"])
     Traceback (most recent call last):
         ...
     AssertionError: missing from sequence 1: 'a'

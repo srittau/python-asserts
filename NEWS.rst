@@ -1,7 +1,7 @@
 Version 0.7.0
 =============
 
-* add assert_equal_items()
+* add assert_count_equal()
 
 Version 0.6
 ===========
