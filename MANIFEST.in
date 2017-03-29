@@ -1,2 +1,3 @@
+include *.pyi
 include *.rst
 include LICENSE
