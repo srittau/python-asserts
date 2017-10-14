@@ -1,6 +1,7 @@
 import datetime
 
-from typing import Any, Container, Type, Callable, ContextManager
+from typing import \
+    Any, Container, List, Type, Callable, Tuple, Union, ContextManager
 
 
 def fail(msg: str = None) -> None:
@@ -86,11 +87,13 @@ def assert_between(lower_bound: Any, upper_bound: Any, expr: Any,
     ...
 
 
-def assert_is_instance(obj: Any, cls: type, msg: str = None) -> None:
+def assert_is_instance(
+        obj: Any, cls: Union[type, Tuple[type, ...]], msg: str = None) -> None:
     ...
 
 
-def assert_not_is_instance(obj: Any, cls: type, msg: str = None) -> None:
+def assert_not_is_instance(
+        obj: Any, cls: Union[type, Tuple[type, ...]], msg: str = None) -> None:
     ...
 
 
@@ -113,8 +116,12 @@ def assert_datetime_about_now_utc(actual: datetime.datetime, msg: str = None) \
 
 class AssertRaisesContext:
 
-    def __init__(self, exception: BaseException, msg: str = None) -> None:
-        ...
+    def __init__(self, exception: Type[BaseException], msg: str = None) \
+            -> None:
+        self.exception = exception
+        self.msg = ""
+        self._exception_name = ""
+        self._tests = []  # type: List[Callable[[BaseException], None]]
 
     def __enter__(self) -> AssertRaisesContext:
         ...
