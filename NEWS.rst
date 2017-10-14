@@ -2,6 +2,7 @@ Version 0.7.0
 =============
 
 * add assert_count_equal()
+* add a stub file
 
 Version 0.6
 ===========
