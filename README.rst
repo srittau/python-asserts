@@ -1,6 +1,11 @@
 Python Asserts
 ==============
 
+.. image:: https://img.shields.io/github/release/srittau/python-assert/all.svg
+   :target: https://github.com/srittau/python-asserts/releases/
+.. image:: https://travis-ci.org/srittau/python-assert.svg?branch=master
+   :target: https://travis-ci.org/srittau/python-asserts
+
 Stand-alone Assertions for Python
 
 This package provides a few advantages over the assertions provided by
