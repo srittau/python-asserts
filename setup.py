@@ -2,6 +2,7 @@
 
 import os
 from setuptools import setup
+import sys
 
 
 def read(fname):
@@ -17,6 +18,10 @@ setup(
     author_email="srittau@rittau.biz",
     url="https://github.com/srittau/python-asserts",
     py_modules=["asserts", "test_asserts"],
+    data_files=[(
+        "lib/python{}.{}/site-packages".format(*sys.version_info[:2]),
+        ["asserts.pyi"],
+    )],
     license="MIT",
     classifiers=[
         "Development Status :: 3 - Alpha",
