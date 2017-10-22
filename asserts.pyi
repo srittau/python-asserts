@@ -1,7 +1,8 @@
 import datetime
 
 from typing import \
-    Any, Container, List, Type, Callable, Tuple, Union, ContextManager
+    Any, Container, List, Type, Callable, Tuple, Union, ContextManager, \
+    Pattern, Optional
 
 
 def fail(msg: str = None) -> None:
@@ -62,7 +63,8 @@ def assert_greater_equal(first: Any, second: Any, msg: str = None) -> None:
     ...
 
 
-def assert_regex(text: str, regex: str, msg: str = None) -> None:
+def assert_regex(text: str, regex: Union[str, Pattern[str]], msg: str = None) \
+        -> None:
     ...
 
 
@@ -104,13 +106,13 @@ def assert_has_attr(obj: Any, attribute: str, msg: str = None) -> None:
 _EPSILON_SECONDS = 5
 
 
-def assert_datetime_about_now(actual: datetime.datetime, msg: str = None) \
-        -> None:
+def assert_datetime_about_now(
+        actual: Optional[datetime.datetime], msg: str = None) -> None:
     ...
 
 
-def assert_datetime_about_now_utc(actual: datetime.datetime, msg: str = None) \
-        -> None:
+def assert_datetime_about_now_utc(
+        actual: Optional[datetime.datetime], msg: str = None) -> None:
     ...
 
 
