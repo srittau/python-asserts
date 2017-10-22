@@ -4,4 +4,6 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-script: python -m unittest test_asserts
+script:
+  - python -m unittest test_asserts
+  - mypy asserts.py test_asserts.py
