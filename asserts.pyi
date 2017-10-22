@@ -2,7 +2,7 @@ import datetime
 
 from typing import \
     Any, Container, List, Type, Callable, Tuple, Union, ContextManager, \
-    Pattern, Optional
+    Pattern, Optional, Iterable
 
 
 def fail(msg: str = None) -> None:
@@ -96,6 +96,11 @@ def assert_is_instance(
 
 def assert_not_is_instance(
         obj: Any, cls: Union[type, Tuple[type, ...]], msg: str = None) -> None:
+    ...
+
+
+def assert_count_equal(sequence1: Iterable[Any], sequence2: Iterable[Any]) \
+        -> None:
     ...
 
 
