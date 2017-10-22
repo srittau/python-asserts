@@ -11,7 +11,7 @@ def read(fname):
 
 setup(
     name="asserts",
-    version="0.7.0",
+    version="0.7.1",
     description="Stand-alone Assertions",
     long_description=read("README.rst"),
     author="Sebastian Rittau",
