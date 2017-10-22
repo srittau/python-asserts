@@ -1,24 +1,35 @@
-Version 0.7.0
-=============
+News in asserts 0.7.0
+=====================
 
-* add assert_count_equal()
-* add a stub file
+* Add a stub file.
 
-Version 0.6
-===========
+API Additions
+-------------
 
-* add assert_less(), assert_less_equal(), assert_greater(), and
-  assert_greater_equal()
-* add assert_not_is_instance()
+* Add assert_count_equal().
+
+News in asserts 0.6
+===================
+
+API Additions
+-------------
+
+* Add assert_less(), assert_less_equal(), assert_greater(), and
+  assert_greater_equal().
+* Add assert_not_is_instance().
+
+Improvements
+------------
+
 * assert_datetime_about_now()/assert_datetime_about_now_utc(): Handle
   comparison with None more gracefully.
 
-Version 0.5.1
-=============
+News in asserts 0.5.1
+=====================
 
 * Add the LICENSE file to the distribution.
 
-Version 0.5
-===========
+News in asserts 0.5
+===================
 
 Initial release.
