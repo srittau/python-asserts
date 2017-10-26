@@ -1,6 +1,10 @@
 News in asserts 0.7.1
 =====================
 
+* Distribute as wheel.
+* asserts is now a package, instead of a module.
+
+
 News in asserts 0.7.0
 =====================
 
