@@ -22,6 +22,7 @@ setup(
         "lib/python{}.{}/site-packages".format(*sys.version_info[:2]),
         ["asserts.pyi"],
     )],
+    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
     license="MIT",
     classifiers=[
         "Development Status :: 3 - Alpha",
