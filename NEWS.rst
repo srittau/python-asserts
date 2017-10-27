@@ -4,7 +4,7 @@ News in asserts 0.7.2
 API Additions
 -------------
 
-* Add assert_warns().
+* Add assert_warns() and assert_warns_regex().
 
 News in asserts 0.7.1
 =====================

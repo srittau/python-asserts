@@ -677,6 +677,19 @@ class AssertWarnsContext(object):
             ...
         AssertionError: DeprecationWarning not issued
 
+    If the warning has the right class, any additional tests that have been
+    configured on the context, will be called:
+
+        >>> from warnings import warn
+        >>> def test(warning):
+        ...     return False
+        >>> context.add_test(test)
+        >>> with context:
+        ...     warn("Wrong Message", DeprecationWarning)
+        Traceback (most recent call last):
+            ...
+        AssertionError: DeprecationWarning not issued
+
     """
 
     def __init__(self, warning_class, msg=None):
@@ -684,6 +697,7 @@ class AssertWarnsContext(object):
         self._msg = msg or "{} not issued".format(warning_class.__name__)
         self._warning_context = None
         self._warnings = []
+        self._tests = []
 
     def __enter__(self):
         self._warning_context = catch_warnings(record=True)
@@ -695,7 +709,19 @@ class AssertWarnsContext(object):
             raise AssertionError(self._msg)
 
     def _is_expected_warning(self, warning):
-        return issubclass(warning.category, self._warning_class)
+        if not issubclass(warning.category, self._warning_class):
+            return False
+        return all(test(warning) for test in self._tests)
+
+    def add_test(self, cb):
+        """Add a test callback.
+
+        This callback is called after determining that the right warning
+        class was issued. The callback will get the issued warning as only
+        argument and must return a boolean value.
+
+        """
+        self._tests.append(cb)
 
 
 def assert_warns(warning_type, msg=None):
@@ -722,3 +748,31 @@ def assert_warns(warning_type, msg=None):
 
     """
     return AssertWarnsContext(warning_type, msg)
+
+
+def assert_warns_regex(warning_type, regex, msg=None):
+    """Fail unless a warning with a message is issued inside the context.
+
+    The message can be a regular expression string or object.
+
+    >>> from warnings import warn
+    >>> with assert_warns_regex(UserWarning, r"#\d+"):
+    ...     warn("Error #42", UserWarning)
+    ...
+    >>> with assert_warns_regex(UserWarning, r"Expected Error"):
+    ...     warn("Generic Error", UserWarning)
+    ...
+    Traceback (most recent call last):
+        ...
+    AssertionError: no UserWarning matching 'Expected Error' issued
+    """
+
+    def test(warning):
+        return re.search(regex, str(warning.message)) is not None
+
+    if msg is None:
+        msg = "no {} matching {} issued".format(
+            warning_type.__name__, repr(regex))
+    context = AssertWarnsContext(warning_type, msg)
+    context.add_test(test)
+    return context
