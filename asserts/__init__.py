@@ -20,8 +20,9 @@ assertions, possibly using assertions from this package as a basis.
 
 """
 
-from datetime import datetime, timedelta
 import re
+from datetime import datetime, timedelta
+from warnings import catch_warnings
 
 
 def fail(msg=None):
@@ -660,3 +661,64 @@ def assert_succeeds(exception, msg=None):
                 fail(msg or exception.__name__ + " was unexpectedly raised")
 
     return _AssertSucceeds()
+
+
+class AssertWarnsContext(object):
+
+    """A context manager to test for warning with certain properties.
+
+    When the context is left and the expected warning has not been raised, an
+    AssertionError will be raised:
+
+        >>> context = AssertWarnsContext(DeprecationWarning)
+        >>> with context:
+        ...    pass
+        Traceback (most recent call last):
+            ...
+        AssertionError: DeprecationWarning not issued
+
+    """
+
+    def __init__(self, warning_class, msg=None):
+        self._warning_class = warning_class
+        self._msg = msg or "{} not issued".format(warning_class.__name__)
+        self._warning_context = None
+        self._warnings = []
+
+    def __enter__(self):
+        self._warning_context = catch_warnings(record=True)
+        self._warnings = self._warning_context.__enter__()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._warning_context.__exit__(exc_type, exc_val, exc_tb)
+        if not any(self._is_expected_warning(w) for w in self._warnings):
+            raise AssertionError(self._msg)
+
+    def _is_expected_warning(self, warning):
+        return issubclass(warning.category, self._warning_class)
+
+
+def assert_warns(warning_type, msg=None):
+    """Fail unless a specific warning is issued inside the context.
+
+    If a different type of warning is issued, it will not be caught.
+
+    >>> from warnings import warn
+    >>> with assert_warns(UserWarning):
+    ...     warn("warning message", UserWarning)
+    ...
+    >>> with assert_warns(UserWarning):
+    ...     pass
+    ...
+    Traceback (most recent call last):
+        ...
+    AssertionError: UserWarning not issued
+    >>> with assert_warns(UserWarning):
+    ...     warn("warning message", UnicodeWarning)
+    ...
+    Traceback (most recent call last):
+        ...
+    AssertionError: UserWarning not issued
+
+    """
+    return AssertWarnsContext(warning_type, msg)

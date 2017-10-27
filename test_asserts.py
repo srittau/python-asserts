@@ -1,7 +1,8 @@
-from datetime import datetime, timedelta
 import re
-from unittest import TestCase
 import sys
+from datetime import datetime, timedelta
+from unittest import TestCase
+from warnings import warn, catch_warnings
 
 from asserts import (
     fail,
@@ -34,6 +35,7 @@ from asserts import (
     assert_raises_regex,
     assert_raises_errno,
     assert_succeeds,
+    assert_warns,
 )
 
 
@@ -562,6 +564,8 @@ class AssertTest(TestCase):
             with assert_raises_errno(OSError, 20, msg="test message"):
                 raise OSError(1, "Test error")
 
+    # assert_succeeds()
+
     def test_assert_succeeds__no_exception_raised(self):
         with assert_succeeds(KeyError):
             pass
@@ -584,3 +588,57 @@ class AssertTest(TestCase):
             pass
         else:
             raise AssertionError("KeyError was not raised")
+
+    # assert_warns()
+
+    def test_assert_warns__warned(self):
+        with assert_succeeds(AssertionError):
+            with assert_warns(FutureWarning):
+                warn("foo", FutureWarning)
+
+    def test_assert_warns__not_warned(self):
+        with assert_raises(AssertionError):
+            with assert_warns(ImportWarning):
+                pass
+
+    def test_assert_warns__wrong_type(self):
+        with assert_raises(AssertionError):
+            with assert_warns(ImportWarning):
+                warn("foo", UnicodeWarning)
+
+    def test_assert_warns__multiple_warnings(self):
+        with assert_succeeds(AssertionError):
+            with assert_warns(UserWarning):
+                warn("foo", UnicodeWarning)
+                warn("bar", UserWarning)
+                warn("baz", FutureWarning)
+
+    def test_assert_warns__warning_handler_deinstalled_on_success(self):
+        with catch_warnings(record=1) as warnings:
+            with assert_warns(UserWarning):
+                warn("foo", UserWarning)
+            assert_equal(0, len(warnings))
+            warn("bar", UserWarning)
+            assert_equal(1, len(warnings))
+
+    def test_assert_warns__warning_handler_deinstalled_on_failure(self):
+        with catch_warnings(record=1) as warnings:
+            try:
+                with assert_warns(UserWarning):
+                    pass
+            except AssertionError:
+                pass
+            assert_equal(0, len(warnings))
+            warn("bar", UserWarning)
+            assert_equal(1, len(warnings))
+
+    def test_assert_warns__default_message(self):
+        with assert_raises_regex(AssertionError,
+                                 r"^ImportWarning not issued"):
+            with assert_warns(ImportWarning):
+                pass
+
+    def test_assert_warns__custom_message(self):
+        with assert_raises_regex(AssertionError, r"^Custom Test Message$"):
+            with assert_warns(ImportWarning, msg="Custom Test Message"):
+                pass
