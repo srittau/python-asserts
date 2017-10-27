@@ -15,6 +15,7 @@ from asserts import (
     assert_equal,
     assert_not_equal,
     assert_almost_equal,
+    assert_not_almost_equal,
     assert_less,
     assert_less_equal,
     assert_greater,
@@ -180,6 +181,8 @@ class AssertTest(TestCase):
         with _assert_raises_assertion("test message"):
             assert_not_equal("abc", "abc", msg="test message")
 
+    # assert_almost_equal()
+
     def test_assert_almost_equal__same(self):
         assert_almost_equal(5, 5)
 
@@ -223,6 +226,49 @@ class AssertTest(TestCase):
             pass
         else:
             raise AssertionError("TypeError not raised")
+
+    # assert_not_almost_equal()
+
+    def test_assert_not_almost_equal__same(self):
+        with _assert_raises_assertion("5 == 5 within 7 places"):
+            assert_not_almost_equal(5, 5)
+
+    def test_assert_not_almost_equal__similar__defaults(self):
+        with _assert_raises_assertion("5 == 5.00000001 within 7 places"):
+            assert_not_almost_equal(5, 5.00000001)
+
+    def test_assert_not_almost_equal__similar__places(self):
+        with _assert_raises_assertion("5 == 5.0001 within 3 places"):
+            assert_not_almost_equal(5, 5.0001, places=3)
+
+    def test_assert_not_almost_equal__similar__delta(self):
+        with _assert_raises_assertion("5 == 5.1 with delta=0.1"):
+            assert_not_almost_equal(5, 5.1, delta=0.1)
+
+    def test_assert_not_almost_equal__not_similar(self):
+        assert_not_almost_equal(5, 5.0001)
+
+    def test_assert_not_almost_equal__not_similar__custom_message(self):
+        with _assert_raises_assertion("custom message"):
+            assert_not_almost_equal(5, 5, msg="custom message")
+
+    def test_assert_not_almost_equal__wrong_types(self):
+        try:
+            assert_not_almost_equal("5", "5")
+        except TypeError:
+            pass
+        else:
+            raise AssertionError("TypeError not raised")
+
+    def test_assert_not_almost_equal__places_and_delta(self):
+        try:
+            assert_not_almost_equal(5, 5, places=3, delta=0.0003)
+        except TypeError:
+            pass
+        else:
+            raise AssertionError("TypeError not raised")
+
+    # assert_less()
 
     def test_assert_less(self):
         assert_less(4, 5)

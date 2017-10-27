@@ -184,6 +184,47 @@ def assert_almost_equal(first, second, places=None, msg=None, delta=None):
         fail(msg or "{!r} != {!r} ".format(first, second) + detail_msg)
 
 
+def assert_not_almost_equal(first, second, places=None, msg=None, delta=None):
+    """Fail if first and second are equal after rounding.
+
+    By default, the difference between first and second is rounded to
+    7 decimal places. This can be configured with the places argument.
+    Alternatively, delta can be used to specify the maximum allowed
+    difference between first and second.
+
+    If first and second can not be rounded or both places and delta are
+    supplied, a TypeError is raised.
+
+    >>> assert_not_almost_equal(5, 5.001)
+    >>> assert_not_almost_equal(5, 5.00000001)
+    Traceback (most recent call last):
+        ...
+    AssertionError: 5 == 5.001 within 7 places
+    >>> assert_not_almost_equal(5, 5.001, places=2)
+    Traceback (most recent call last):
+        ...
+    AssertionError: 5 == 5.001 within 2 places
+    >>> assert_not_almost_equal(5, 5.001, delta=0.1)
+    Traceback (most recent call last):
+        ...
+    AssertionError: 5 == 5.001 with delta 0.1
+    """
+
+    if delta is not None and places is not None:
+        raise TypeError("'places' and 'delta' are mutually exclusive")
+    if delta is not None:
+        diff = second - first
+        success = diff >= delta
+        detail_msg = "with delta={}".format(delta)
+    else:
+        if places is None:
+            places = 7
+        success = bool(round(second - first, places))
+        detail_msg = "within {} places".format(places)
+    if not success:
+        fail(msg or "{!r} == {!r} ".format(first, second) + detail_msg)
+
+
 def assert_less(first, second, msg=None):
     """Fail if first is not less than second.
 

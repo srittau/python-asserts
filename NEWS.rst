@@ -1,6 +1,11 @@
 News in asserts 0.7.3
 =====================
 
+API Additions
+-------------
+
+* Add assert_not_almost_equal().
+
 News in asserts 0.7.2
 =====================
 
