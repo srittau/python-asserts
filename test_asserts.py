@@ -234,6 +234,22 @@ class AssertTest(TestCase):
         else:
             raise AssertionError("TypeError not raised")
 
+    def test_assert_almost_equal__delta_eq_0(self):
+        try:
+            assert_almost_equal(5, 5, delta=0)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("ValueError not raised")
+
+    def test_assert_almost_equal__delta_lt_0(self):
+        try:
+            assert_almost_equal(5, 5, delta=-1)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("ValueError not raised")
+
     # assert_not_almost_equal()
 
     def test_assert_not_almost_equal__same(self):
@@ -284,6 +300,22 @@ class AssertTest(TestCase):
             pass
         else:
             raise AssertionError("TypeError not raised")
+
+    def test_not_assert_almost_equal__delta_eq_0(self):
+        try:
+            assert_not_almost_equal(5, 5, delta=0)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("ValueError not raised")
+
+    def test_not_assert_almost_equal__delta_lt_0(self):
+        try:
+            assert_not_almost_equal(5, 5, delta=-1)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("ValueError not raised")
 
     # assert_less()
 

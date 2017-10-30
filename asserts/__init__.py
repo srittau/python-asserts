@@ -167,11 +167,13 @@ def assert_almost_equal(first, second, places=None, msg=None, delta=None):
     AssertionError: 5 != 5.001 within 7 places
     >>> assert_almost_equal(5, 5.001, places=2)
     >>> assert_almost_equal(5, 5.001, delta=0.1)
-
     """
+
     if delta is not None and places is not None:
         raise TypeError("'places' and 'delta' are mutually exclusive")
     if delta is not None:
+        if delta <= 0:
+            raise ValueError("delta must be larger than 0")
         diff = abs(second - first)
         success = diff < delta
         detail_msg = "with delta={}".format(delta)
@@ -213,6 +215,8 @@ def assert_not_almost_equal(first, second, places=None, msg=None, delta=None):
     if delta is not None and places is not None:
         raise TypeError("'places' and 'delta' are mutually exclusive")
     if delta is not None:
+        if delta <= 0:
+            raise ValueError("delta must be larger than 0")
         diff = abs(second - first)
         success = diff >= delta
         detail_msg = "with delta={}".format(delta)

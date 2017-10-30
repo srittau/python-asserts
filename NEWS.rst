@@ -6,6 +6,11 @@ API Additions
 
 * Add assert_not_almost_equal().
 
+Improvements
+------------
+
+* assert_almost_equal(): Raise ValueError if diff <= 0.
+
 Bug Fixes
 ---------
 
