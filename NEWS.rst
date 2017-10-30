@@ -1,6 +1,12 @@
 News in asserts 0.8.0
 =====================
 
+API-Incompatible Changes
+------------------------
+
+* assert_almost_equal(), assert_not_almost_equal(): Place msg_fmt as third
+  argument.
+
 News in asserts 0.7.3
 =====================
 

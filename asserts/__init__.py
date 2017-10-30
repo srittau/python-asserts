@@ -149,7 +149,7 @@ def assert_not_equal(first, second, msg=None):
         fail(msg or "{!r} == {!r}".format(first, second))
 
 
-def assert_almost_equal(first, second, places=None, msg=None, delta=None):
+def assert_almost_equal(first, second, msg=None, places=None, delta=None):
     """Fail if first and second are not equal after rounding.
 
     By default, the difference between first and second is rounded to
@@ -186,7 +186,7 @@ def assert_almost_equal(first, second, places=None, msg=None, delta=None):
         fail(msg or "{!r} != {!r} ".format(first, second) + detail_msg)
 
 
-def assert_not_almost_equal(first, second, places=None, msg=None, delta=None):
+def assert_not_almost_equal(first, second, msg=None, places=None, delta=None):
     """Fail if first and second are equal after rounding.
 
     By default, the difference between first and second is rounded to
