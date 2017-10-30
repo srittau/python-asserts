@@ -9,6 +9,8 @@ API Additions
 Bug Fixes
 ---------
 
+* assert_almost_equal() would never fail if a delta was supplied and the
+  second number was smaller than the first.
 * Use fail() instead of raise AssertionError in a few assertions.
 
 News in asserts 0.7.2

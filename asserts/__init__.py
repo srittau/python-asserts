@@ -172,7 +172,7 @@ def assert_almost_equal(first, second, places=None, msg=None, delta=None):
     if delta is not None and places is not None:
         raise TypeError("'places' and 'delta' are mutually exclusive")
     if delta is not None:
-        diff = second - first
+        diff = abs(second - first)
         success = diff < delta
         detail_msg = "with delta={}".format(delta)
     else:
@@ -213,7 +213,7 @@ def assert_not_almost_equal(first, second, places=None, msg=None, delta=None):
     if delta is not None and places is not None:
         raise TypeError("'places' and 'delta' are mutually exclusive")
     if delta is not None:
-        diff = second - first
+        diff = abs(second - first)
         success = diff >= delta
         detail_msg = "with delta={}".format(delta)
     else:
