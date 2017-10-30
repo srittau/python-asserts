@@ -6,6 +6,11 @@ API Additions
 
 * Add assert_not_almost_equal().
 
+Bug Fixes
+---------
+
+* Use fail() instead of raise AssertionError in a few assertions.
+
 News in asserts 0.7.2
 =====================
 

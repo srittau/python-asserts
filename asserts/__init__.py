@@ -409,7 +409,7 @@ def assert_count_equal(sequence1, sequence2):
 
     missing_from_1, missing_from_2 = compare()
     if missing_from_1 or missing_from_2:
-        raise AssertionError(build_message())
+        fail(build_message())
 
 
 def assert_between(lower_bound, upper_bound, expr, msg=None):
@@ -492,7 +492,7 @@ def assert_datetime_about_now(actual, msg=None):
     if actual is None:
         if msg is None:
             msg = "None is not a valid date/time"
-        raise AssertionError(msg)
+        fail(msg)
     now = datetime.now()
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
@@ -514,7 +514,7 @@ def assert_datetime_about_now_utc(actual, msg=None):
     if actual is None:
         if msg is None:
             msg = "None is not a valid date/time"
-        raise AssertionError(msg)
+        fail(msg)
     now = datetime.utcnow()
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
@@ -747,7 +747,7 @@ class AssertWarnsContext(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._warning_context.__exit__(exc_type, exc_val, exc_tb)
         if not any(self._is_expected_warning(w) for w in self._warnings):
-            raise AssertionError(self._msg)
+            fail(self._msg)
 
     def _is_expected_warning(self, warning):
         if not issubclass(warning.category, self._warning_class):
