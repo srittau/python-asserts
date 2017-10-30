@@ -4,8 +4,21 @@ News in asserts 0.8.0
 API-Incompatible Changes
 ------------------------
 
+* Replace `msg` argument with `msg_fmt` in all assertions (except `fail()`).
+  This allows you to customize error messages more easily than before, because
+  `format()` with appropriate keyword arguments is now called on these
+  strings. See the documentation of individual assertions for the supported
+  arguments.
+* Replace AssertRaisesContext.msg and AssertWarnsContext.msg with msg_fmt.
 * assert_almost_equal(), assert_not_almost_equal(): Place msg_fmt as third
   argument.
+
+API Additions
+-------------
+
+* assert_count_equal(): Add `msg_fmt` argument.
+* Add AssertRaisesErrnoContext, AssertRaisesRegexContext, and
+  AssertWarnsRegexContext.
 
 News in asserts 0.7.3
 =====================

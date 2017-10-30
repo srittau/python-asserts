@@ -37,7 +37,7 @@ def fail(msg=None):
     raise AssertionError(msg or "assertion failure")
 
 
-def assert_true(expr, msg=None):
+def assert_true(expr, msg_fmt="{msg}"):
     """Fail the test unless the expression is truthy.
 
     >>> assert_true("Hello World!")
@@ -46,14 +46,17 @@ def assert_true(expr, msg=None):
         ...
     AssertionError: '' is not truthy
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * expr - tested expression
     """
+
     if not expr:
-        if not msg:
-            msg = repr(expr) + " is not truthy"
-        fail(msg)
+        msg = "{!r} is not truthy".format(expr)
+        fail(msg_fmt.format(msg=msg, expr=expr))
 
 
-def assert_false(expr, msg=None):
+def assert_false(expr, msg_fmt="{msg}"):
     """Fail the test unless the expression is falsy.
 
     >>> assert_false("")
@@ -62,14 +65,17 @@ def assert_false(expr, msg=None):
         ...
     AssertionError: 'Hello World!' is not falsy
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * expr - tested expression
     """
+
     if expr:
-        if not msg:
-            msg = repr(expr) + " is not falsy"
-        fail(msg)
+        msg = "{!r} is not falsy".format(expr)
+        fail(msg_fmt.format(msg=msg, expr=expr))
 
 
-def assert_boolean_true(expr, msg=None):
+def assert_boolean_true(expr, msg_fmt="{msg}"):
     """Fail the test unless the expression is the constant True.
 
     >>> assert_boolean_true(True)
@@ -78,11 +84,17 @@ def assert_boolean_true(expr, msg=None):
         ...
     AssertionError: 'Hello World!' is not True
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * expr - tested expression
     """
-    assert_is(expr, True, msg)
+
+    if expr is not True:
+        msg = "{!r} is not True".format(expr)
+        fail(msg_fmt.format(msg=msg, expr=expr))
 
 
-def assert_boolean_false(expr, msg=None):
+def assert_boolean_false(expr, msg_fmt="{msg}"):
     """Fail the test unless the expression is the constant False.
 
     >>> assert_boolean_false(False)
@@ -91,11 +103,17 @@ def assert_boolean_false(expr, msg=None):
         ...
     AssertionError: 0 is not False
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * expr - tested expression
     """
-    assert_is(expr, False, msg)
+
+    if expr is not False:
+        msg = "{!r} is not False".format(expr)
+        fail(msg_fmt.format(msg=msg, expr=expr))
 
 
-def assert_is_none(expr, msg=None):
+def assert_is_none(expr, msg_fmt="{msg}"):
     """Fail if the expression is not None.
 
     >>> assert_is_none(None)
@@ -104,11 +122,17 @@ def assert_is_none(expr, msg=None):
         ...
     AssertionError: False is not None
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * expr - tested expression
     """
-    assert_is(expr, None, msg)
+
+    if expr is not None:
+        msg = "{!r} is not None".format(expr)
+        fail(msg_fmt.format(msg=msg, expr=expr))
 
 
-def assert_is_not_none(expr, msg=None):
+def assert_is_not_none(expr, msg_fmt="{msg}"):
     """Fail if the expression is None.
 
     >>> assert_is_not_none(0)
@@ -117,11 +141,16 @@ def assert_is_not_none(expr, msg=None):
         ...
     AssertionError: expression is None
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * expr - tested expression
     """
-    assert_is_not(expr, None, msg or "expression is None")
+    if expr is None:
+        msg = "expression is None"
+        fail(msg_fmt.format(msg=msg, expr=expr))
 
 
-def assert_equal(first, second, msg=None):
+def assert_equal(first, second, msg_fmt="{msg}"):
     """Fail unless first equals second, as determined by the '==' operator.
 
     >>> assert_equal(5, 5.0)
@@ -130,12 +159,18 @@ def assert_equal(first, second, msg=None):
         ...
     AssertionError: 'Hello World!' != 'Goodbye!'
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
     """
+
     if not first == second:
-        fail(msg or "{!r} != {!r}".format(first, second))
+        msg = "{!r} != {!r}".format(first, second)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_not_equal(first, second, msg=None):
+def assert_not_equal(first, second, msg_fmt="{msg}"):
     """Fail if first equals second, as determined by the '==' operator.
 
     >>> assert_not_equal(5, 8)
@@ -144,12 +179,19 @@ def assert_not_equal(first, second, msg=None):
         ...
     AssertionError: -7 == -7.0
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
     """
+
     if first == second:
-        fail(msg or "{!r} == {!r}".format(first, second))
+        msg = "{!r} == {!r}".format(first, second)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_almost_equal(first, second, msg=None, places=None, delta=None):
+def assert_almost_equal(
+        first, second, msg_fmt="{msg}", places=None, delta=None):
     """Fail if first and second are not equal after rounding.
 
     By default, the difference between first and second is rounded to
@@ -167,6 +209,13 @@ def assert_almost_equal(first, second, msg=None, places=None, delta=None):
     AssertionError: 5 != 5.001 within 7 places
     >>> assert_almost_equal(5, 5.001, places=2)
     >>> assert_almost_equal(5, 5.001, delta=0.1)
+
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
+    * places - number of places to compare or None
+    * delta - delta or None
     """
 
     if delta is not None and places is not None:
@@ -183,10 +232,13 @@ def assert_almost_equal(first, second, msg=None, places=None, delta=None):
         success = not round(second - first, places)
         detail_msg = "within {} places".format(places)
     if not success:
-        fail(msg or "{!r} != {!r} ".format(first, second) + detail_msg)
+        msg = "{!r} != {!r} {}".format(first, second, detail_msg)
+        fail(msg_fmt.format(msg=msg, first=first, second=second,
+                            places=places, delta=delta))
 
 
-def assert_not_almost_equal(first, second, msg=None, places=None, delta=None):
+def assert_not_almost_equal(first, second, msg_fmt="{msg}",
+                            places=None, delta=None):
     """Fail if first and second are equal after rounding.
 
     By default, the difference between first and second is rounded to
@@ -201,7 +253,7 @@ def assert_not_almost_equal(first, second, msg=None, places=None, delta=None):
     >>> assert_not_almost_equal(5, 5.00000001)
     Traceback (most recent call last):
         ...
-    AssertionError: 5 == 5.001 within 7 places
+    AssertionError: 5 == 5.00000001 within 7 places
     >>> assert_not_almost_equal(5, 5.001, places=2)
     Traceback (most recent call last):
         ...
@@ -209,7 +261,14 @@ def assert_not_almost_equal(first, second, msg=None, places=None, delta=None):
     >>> assert_not_almost_equal(5, 5.001, delta=0.1)
     Traceback (most recent call last):
         ...
-    AssertionError: 5 == 5.001 with delta 0.1
+    AssertionError: 5 == 5.001 with delta=0.1
+
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
+    * places - number of places to compare or None
+    * delta - delta or None
     """
 
     if delta is not None and places is not None:
@@ -226,10 +285,12 @@ def assert_not_almost_equal(first, second, msg=None, places=None, delta=None):
         success = bool(round(second - first, places))
         detail_msg = "within {} places".format(places)
     if not success:
-        fail(msg or "{!r} == {!r} ".format(first, second) + detail_msg)
+        msg = "{!r} == {!r} {}".format(first, second, detail_msg)
+        fail(msg_fmt.format(msg=msg, first=first, second=second,
+                            places=places, delta=delta))
 
 
-def assert_less(first, second, msg=None):
+def assert_less(first, second, msg_fmt="{msg}"):
     """Fail if first is not less than second.
 
     >>> assert_less('bar', 'foo')
@@ -238,12 +299,18 @@ def assert_less(first, second, msg=None):
         ...
     AssertionError: 5 is not less than 5
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
     """
+
     if not first < second:
-        fail(msg or "{!r} is not less than {!r}".format(first, second))
+        msg = "{!r} is not less than {!r}".format(first, second)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_less_equal(first, second, msg=None):
+def assert_less_equal(first, second, msg_fmt="{msg}"):
     """Fail if first is not less than or equal to second.
 
     >>> assert_less_equal('bar', 'foo')
@@ -253,13 +320,18 @@ def assert_less_equal(first, second, msg=None):
         ...
     AssertionError: 6 is not less than or equal to 5
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
     """
+
     if not first <= second:
-        fail(msg or "{!r} is not less than or equal to {!r}".format(
-            first, second))
+        msg = "{!r} is not less than or equal to {!r}".format(first, second)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_greater(first, second, msg=None):
+def assert_greater(first, second, msg_fmt="{msg}"):
     """Fail if first is not greater than second.
 
     >>> assert_greater('foo', 'bar')
@@ -268,12 +340,18 @@ def assert_greater(first, second, msg=None):
         ...
     AssertionError: 5 is not greater than 5
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
     """
+
     if not first > second:
-        fail(msg or "{!r} is not greater than {!r}".format(first, second))
+        msg = "{!r} is not greater than {!r}".format(first, second)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_greater_equal(first, second, msg=None):
+def assert_greater_equal(first, second, msg_fmt="{msg}"):
     """Fail if first is not greater than or equal to second.
 
     >>> assert_greater_equal('foo', 'bar')
@@ -283,13 +361,18 @@ def assert_greater_equal(first, second, msg=None):
         ...
     AssertionError: 5 is not greater than or equal to 6
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
     """
+
     if not first >= second:
-        fail(msg or "{!r} is not greater than or equal to {!r}".format(
-            first, second))
+        msg = "{!r} is not greater than or equal to {!r}".format(first, second)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_regex(text, regex, msg=None):
+def assert_regex(text, regex, msg_fmt="{msg}"):
     """Fail if text does not match the regular expression.
 
     regex can be either a regular expression string or a compiled regular
@@ -301,13 +384,19 @@ def assert_regex(text, regex, msg=None):
         ...
     AssertionError: 'Hello World!' does not match '\\\\d'
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * text - text that is matched
+    * pattern - regular expression pattern as string
     """
+
     compiled = re.compile(regex)
     if not compiled.search(text):
-        fail(msg or "{!r} does not match {!r}".format(text, compiled.pattern))
+        msg = "{!r} does not match {!r}".format(text, compiled.pattern)
+        fail(msg_fmt.format(msg=msg, text=text, pattern=compiled.pattern))
 
 
-def assert_is(first, second, msg=None):
+def assert_is(first, second, msg_fmt="{msg}"):
     """Fail if first and second do not refer to the same object.
 
     >>> list1 = [5, "foo"]
@@ -318,12 +407,18 @@ def assert_is(first, second, msg=None):
         ...
     AssertionError: [5, 'foo'] is not [5, 'foo']
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
     """
+
     if first is not second:
-        fail(msg or "{!r} is not {!r}".format(first, second))
+        msg = "{!r} is not {!r}".format(first, second)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_is_not(first, second, msg=None):
+def assert_is_not(first, second, msg_fmt="{msg}"):
     """Fail if first and second refer to the same object.
 
     >>> list1 = [5, "foo"]
@@ -334,12 +429,18 @@ def assert_is_not(first, second, msg=None):
         ...
     AssertionError: both arguments refer to [5, 'foo']
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the first argument
+    * second - the second argument
     """
+
     if first is second:
-        fail(msg or "both arguments refer to {!r}".format(first))
+        msg = "both arguments refer to {!r}".format(first)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_in(first, second, msg=None):
+def assert_in(first, second, msg_fmt="{msg}"):
     """Fail if first is not in collection second.
 
     >>> assert_in("foo", [4, "foo", {}])
@@ -348,12 +449,18 @@ def assert_in(first, second, msg=None):
         ...
     AssertionError: 'bar' not in [4, 'foo', {}]
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the element looked for
+    * second - the container looked in
     """
-    msg = msg or "{!r} not in {!r}".format(first, second)
-    assert_true(first in second, msg)
+
+    if first not in second:
+        msg = "{!r} not in {!r}".format(first, second)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_not_in(first, second, msg=None):
+def assert_not_in(first, second, msg_fmt="{msg}"):
     """Fail if first is in a collection second.
 
     >>> assert_not_in("bar", [4, "foo", {}])
@@ -362,12 +469,17 @@ def assert_not_in(first, second, msg=None):
         ...
     AssertionError: 'foo' is in [4, 'foo', {}]
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - the element looked for
+    * second - the container looked in
     """
-    msg = msg or "{!r} is in {!r}".format(first, second)
-    assert_false(first in second, msg)
+    if first in second:
+        msg = "{!r} is in {!r}".format(first, second)
+        fail(msg_fmt.format(msg=msg, first=first, second=second))
 
 
-def assert_count_equal(sequence1, sequence2):
+def assert_count_equal(sequence1, sequence2, msg_fmt="{msg}"):
     """Compare the items of two sequences, ignoring order.
 
     >>> assert_count_equal([1, 2], {2, 1})
@@ -387,6 +499,10 @@ def assert_count_equal(sequence1, sequence2):
         ...
     AssertionError: missing from sequence 1: 'a'
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * first - first sequence
+    * second - second sequence
     """
 
     def compare():
@@ -413,10 +529,11 @@ def assert_count_equal(sequence1, sequence2):
 
     missing_from_1, missing_from_2 = compare()
     if missing_from_1 or missing_from_2:
-        fail(build_message())
+        fail(msg_fmt.format(
+            msg=build_message(), first=sequence1, second=sequence2))
 
 
-def assert_between(lower_bound, upper_bound, expr, msg=None):
+def assert_between(lower_bound, upper_bound, expr, msg_fmt="{msg}"):
     """Fail if an expression is not between certain bounds (inclusive).
 
     >>> assert_between(5, 15, 5)
@@ -426,14 +543,21 @@ def assert_between(lower_bound, upper_bound, expr, msg=None):
         ...
     AssertionError: 4.9 is not between 5 and 15
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * lower - lower bound
+    * upper - upper bound
+    * expr - tested expression
     """
+
     if not lower_bound <= expr <= upper_bound:
-        msg = msg or "{!r} is not between {} and {}".format(
+        msg = "{!r} is not between {} and {}".format(
             expr, lower_bound, upper_bound)
-        fail(msg)
+        fail(msg_fmt.format(msg=msg, lower=lower_bound, upper=upper_bound,
+                            expr=expr))
 
 
-def assert_is_instance(obj, cls, msg=None):
+def assert_is_instance(obj, cls, msg_fmt="{msg}"):
     """Fail if an object is not an instance of a class or tuple of classes.
 
     >>> assert_is_instance(5, int)
@@ -443,14 +567,19 @@ def assert_is_instance(obj, cls, msg=None):
         ...
     AssertionError: 5 is an instance of <class 'int'>, expected <class 'str'>
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * obj - object to test
+    * types - tuple of types tested against
     """
     if not isinstance(obj, cls):
-        msg = (msg or "{!r} is an instance of {!r}, expected {!r}".format(
-            obj, obj.__class__, cls))
-        fail(msg)
+        msg = "{!r} is an instance of {!r}, expected {!r}".format(
+            obj, obj.__class__, cls)
+        types = cls if isinstance(cls, tuple) else (cls, )
+        fail(msg_fmt.format(msg=msg, obj=obj, types=types))
 
 
-def assert_not_is_instance(obj, cls, msg=None):
+def assert_not_is_instance(obj, cls, msg_fmt="{msg}"):
     """Fail if an object is an instance of a class or tuple of classes.
 
     >>> assert_not_is_instance(5, str)
@@ -460,13 +589,18 @@ def assert_not_is_instance(obj, cls, msg=None):
         ...
     AssertionError: 'foo' is an instance of <class 'str'>
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * obj - object to test
+    * types - tuple of types tested against
     """
     if isinstance(obj, cls):
-        msg = msg or "{!r} is an instance of {!r}".format(obj, obj.__class__)
-        fail(msg)
+        msg = "{!r} is an instance of {!r}".format(obj, obj.__class__)
+        types = cls if isinstance(cls, tuple) else (cls,)
+        fail(msg_fmt.format(msg=msg, obj=obj, types=types))
 
 
-def assert_has_attr(obj, attribute, msg=None):
+def assert_has_attr(obj, attribute, msg_fmt="{msg}"):
     """Fail is an object does not have an attribute.
 
     >>> assert_has_attr([], "index")
@@ -475,15 +609,21 @@ def assert_has_attr(obj, attribute, msg=None):
         ...
     AssertionError: [] does not have attribute 'i_do_not_have_this'
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * obj - object to test
+    * attribute - name of the attribute to check
     """
+
     if not hasattr(obj, attribute):
-        fail(msg or repr(obj) + " does not have attribute '" + attribute + "'")
+        msg = "{!r} does not have attribute '{}'".format(obj, attribute)
+        fail(msg_fmt.format(msg=msg, obj=obj, attribute=attribute))
 
 
 _EPSILON_SECONDS = 5
 
 
-def assert_datetime_about_now(actual, msg=None):
+def assert_datetime_about_now(actual, msg_fmt="{msg}"):
     """Fail if a datetime object is not within 5 seconds of the local time.
 
     >>> assert_datetime_about_now(datetime.now())
@@ -492,20 +632,24 @@ def assert_datetime_about_now(actual, msg=None):
         ...
     AssertionError: datetime.datetime(1900, 1, 1, 12, 0) is not close to current date/time
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * actual - datetime object to check
+    * now - current datetime that was tested against
     """
-    if actual is None:
-        if msg is None:
-            msg = "None is not a valid date/time"
-        fail(msg)
+
     now = datetime.now()
+    if actual is None:
+        msg = "None is not a valid date/time"
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
-    if msg is None:
+    if not lower_bound <= actual <= upper_bound:
         msg = "{!r} is not close to current date/time".format(actual)
-    assert_between(lower_bound, upper_bound, actual, msg)
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
 
 
-def assert_datetime_about_now_utc(actual, msg=None):
+def assert_datetime_about_now_utc(actual, msg_fmt="{msg}"):
     """Fail if a datetime object is not within 5 seconds of UTC.
 
     >>> assert_datetime_about_now_utc(datetime.utcnow())
@@ -514,17 +658,21 @@ def assert_datetime_about_now_utc(actual, msg=None):
         ...
     AssertionError: datetime.datetime(1900, 1, 1, 12, 0) is not close to current UTC date/time
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * actual - datetime object to check
+    * now - current datetime that was tested against
     """
-    if actual is None:
-        if msg is None:
-            msg = "None is not a valid date/time"
-        fail(msg)
+
     now = datetime.utcnow()
+    if actual is None:
+        msg = "None is not a valid date/time"
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
-    if not msg:
+    if not lower_bound <= actual <= upper_bound:
         msg = "{!r} is not close to current UTC date/time".format(actual)
-    assert_between(lower_bound, upper_bound, actual, msg)
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
 
 
 class AssertRaisesContext(object):
@@ -564,9 +712,10 @@ class AssertRaisesContext(object):
 
     """
 
-    def __init__(self, exception, msg=None):
+    def __init__(self, exception, msg_fmt="{msg}"):
         self.exception = exception
-        self.msg = msg
+        self.msg_fmt = msg_fmt
+        self._exc_type = exception
         self._exception_name = getattr(exception, "__name__", str(exception))
         self._tests = []
 
@@ -575,12 +724,18 @@ class AssertRaisesContext(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if not exc_type:
-            fail(self.msg or "{} not raised".format(self._exception_name))
+            msg = "{} not raised".format(self._exception_name)
+            fail(self.format_message(msg))
         if not issubclass(exc_type, self.exception):
             return False
         for test in self._tests:
             test(exc_val)
         return True
+
+    def format_message(self, default_msg):
+        return self.msg_fmt.format(
+            msg=default_msg, exc_type=self._exc_type,
+            exc_name=self._exception_name)
 
     def add_test(self, cb):
         """Add a test callback.
@@ -593,7 +748,36 @@ class AssertRaisesContext(object):
         self._tests.append(cb)
 
 
-def assert_raises(exception, msg=None):
+class AssertRaisesRegexContext(AssertRaisesContext):
+
+    """A context manager to test for exceptions and their messages."""
+
+    def __init__(self, exception, pattern, msg_fmt="{msg}"):
+        super(AssertRaisesRegexContext, self).__init__(exception, msg_fmt)
+        self.pattern = pattern
+
+    def format_message(self, default_msg):
+        return self.msg_fmt.format(
+            msg=default_msg, exc_type=self._exc_type,
+            exc_name=self._exception_name, pattern=self.pattern, text="")
+
+
+class AssertRaisesErrnoContext(AssertRaisesContext):
+
+    """A context manager to test for exceptions with errnos."""
+
+    def __init__(self, exception, expected_errno, msg_fmt="{msg}"):
+        super(AssertRaisesErrnoContext, self).__init__(exception, msg_fmt)
+        self.expected_errno = expected_errno
+
+    def format_message(self, default_msg):
+        return self.msg_fmt.format(
+            msg=default_msg, exc_type=self._exc_type,
+            exc_name=self._exception_name,
+            expected_errno=self.expected_errno, actual_errno=None)
+
+
+def assert_raises(exception, msg_fmt="{msg}"):
     """Fail unless a specific exception is raised inside the context.
 
     If a different type of exception is raised, it will not be caught.
@@ -614,11 +798,16 @@ def assert_raises(exception, msg=None):
         ...
     ValueError: wrong error
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * exc_type - exception type that is expected
+    * exc_name - expected exception type name
     """
-    return AssertRaisesContext(exception, msg)
+
+    return AssertRaisesContext(exception, msg_fmt)
 
 
-def assert_raises_regex(exception, regex, msg=None):
+def assert_raises_regex(exception, regex, msg_fmt="{msg}"):
     """Fail unless an exception with a message that matches a regular
      expression is raised within the context.
 
@@ -634,17 +823,29 @@ def assert_raises_regex(exception, regex, msg=None):
         ...
     AssertionError: 'Generic Error' does not match '\\\\d+'
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * exc_type - exception type that is expected
+    * exc_name - expected exception type name
+    * text - actual error text
+    * pattern - expected error message as regular expression string
     """
 
     def test(exc):
-        assert_regex(str(exc), regex, msg)
+        compiled = re.compile(regex)
+        text = exc.args[0]
+        if not compiled.search(text):
+            msg = "{!r} does not match {!r}".format(text, compiled.pattern)
+            fail(msg_fmt.format(
+                msg=msg, text=text, pattern=compiled.pattern,
+                exc_type=exception, exc_name=exception.__name__))
 
-    context = AssertRaisesContext(exception, msg)
+    context = AssertRaisesRegexContext(exception, regex, msg_fmt)
     context.add_test(test)
     return context
 
 
-def assert_raises_errno(exception, errno, msg=None):
+def assert_raises_errno(exception, errno, msg_fmt="{msg}"):
     """Fail unless an exception with a specific errno is raised with the
      context.
 
@@ -658,17 +859,26 @@ def assert_raises_errno(exception, errno, msg=None):
         ...
     AssertionError: wrong errno: 44 != 17
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * exc_type - exception type that is expected
+    * exc_name - expected exception type name
+    * expected_errno -
+    * actual_errno - raised errno or None if no matching exception was raised
     """
 
     def check_errno(exc):
         if errno != exc.errno:
-            fail(msg or "wrong errno: {!r} != {!r}".format(errno, exc.errno))
-    context = AssertRaisesContext(exception, msg)
+            msg = "wrong errno: {!r} != {!r}".format(errno, exc.errno)
+            fail(msg_fmt.format(msg=msg, exc_type=exception,
+                                exc_name=exception.__name__,
+                                expected_errno=errno, actual_errno=exc.errno))
+    context = AssertRaisesErrnoContext(exception, errno, msg_fmt)
     context.add_test(check_errno)
     return context
 
 
-def assert_succeeds(exception, msg=None):
+def assert_succeeds(exception, msg_fmt="{msg}"):
     """Fail if a specific exception is raised within the context.
 
     This assertion should be used for cases, where successfully running a
@@ -694,6 +904,11 @@ def assert_succeeds(exception, msg=None):
         ...
     TypeError: Wrong Error
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * exc_type - exception type
+    * exc_name - exception type name
+    * exception - exception that was raised
     """
 
     class _AssertSucceeds(object):
@@ -703,14 +918,17 @@ def assert_succeeds(exception, msg=None):
 
         def __exit__(self, exc_type, exc_val, exc_tb):
             if exc_type and issubclass(exc_type, exception):
-                fail(msg or exception.__name__ + " was unexpectedly raised")
+                msg = exception.__name__ + " was unexpectedly raised"
+                fail(msg_fmt.format(
+                    msg=msg, exc_type=exception, exc_name=exception.__name__,
+                    exception=exc_val))
 
     return _AssertSucceeds()
 
 
 class AssertWarnsContext(object):
 
-    """A context manager to test for warning with certain properties.
+    """A context manager to test for warnings with certain properties.
 
     When the context is left and the expected warning has not been raised, an
     AssertionError will be raised:
@@ -737,9 +955,9 @@ class AssertWarnsContext(object):
 
     """
 
-    def __init__(self, warning_class, msg=None):
+    def __init__(self, warning_class, msg_fmt="{msg}"):
         self._warning_class = warning_class
-        self._msg = msg or "{} not issued".format(warning_class.__name__)
+        self._msg_fmt = msg_fmt
         self._warning_context = None
         self._warnings = []
         self._tests = []
@@ -751,7 +969,13 @@ class AssertWarnsContext(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._warning_context.__exit__(exc_type, exc_val, exc_tb)
         if not any(self._is_expected_warning(w) for w in self._warnings):
-            fail(self._msg)
+            fail(self.format_message())
+
+    def format_message(self):
+        msg = "{} not issued".format(self._warning_class.__name__)
+        return self._msg_fmt.format(
+            msg=msg, exc_type=self._warning_class,
+            exc_name=self._warning_class.__name__)
 
     def _is_expected_warning(self, warning):
         if not issubclass(warning.category, self._warning_class):
@@ -769,7 +993,24 @@ class AssertWarnsContext(object):
         self._tests.append(cb)
 
 
-def assert_warns(warning_type, msg=None):
+class AssertWarnsRegexContext(AssertWarnsContext):
+
+    """A context manager to test for warnings and their messages."""
+
+    def __init__(self, warning_class, pattern, msg_fmt="{msg}"):
+        super(AssertWarnsRegexContext, self).__init__(warning_class, msg_fmt)
+        self.pattern = pattern
+
+    def format_message(self):
+        msg = "no {} matching {} issued".format(self._warning_class.__name__,
+                                                repr(self.pattern))
+        return self._msg_fmt.format(
+            msg=msg, exc_type=self._warning_class,
+            exc_name=self._warning_class.__name__,
+            pattern=self.pattern)
+
+
+def assert_warns(warning_type, msg_fmt="{msg}"):
     """Fail unless a specific warning is issued inside the context.
 
     If a different type of warning is issued, it will not be caught.
@@ -791,11 +1032,15 @@ def assert_warns(warning_type, msg=None):
         ...
     AssertionError: UserWarning not issued
 
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * exc_type - exception type
+    * exc_name - exception type name
     """
-    return AssertWarnsContext(warning_type, msg)
+    return AssertWarnsContext(warning_type, msg_fmt)
 
 
-def assert_warns_regex(warning_type, regex, msg=None):
+def assert_warns_regex(warning_type, regex, msg_fmt="{msg}"):
     """Fail unless a warning with a message is issued inside the context.
 
     The message can be a regular expression string or object.
@@ -810,14 +1055,17 @@ def assert_warns_regex(warning_type, regex, msg=None):
     Traceback (most recent call last):
         ...
     AssertionError: no UserWarning matching 'Expected Error' issued
+
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * exc_type - warning type
+    * exc_name - warning type name
+    * pattern - expected warning message as regular expression string
     """
 
     def test(warning):
         return re.search(regex, str(warning.message)) is not None
 
-    if msg is None:
-        msg = "no {} matching {} issued".format(
-            warning_type.__name__, repr(regex))
-    context = AssertWarnsContext(warning_type, msg)
+    context = AssertWarnsRegexContext(warning_type, regex, msg_fmt)
     context.add_test(test)
     return context
