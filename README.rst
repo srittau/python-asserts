@@ -36,3 +36,10 @@ Usage:
 >>> assert_true(True, msg="custom failure message")
 >>> with assert_raises(KeyError):
 ...     raise KeyError()
+
+Failure messages can be customized:
+
+>>> assert_equal(13, 14, msg_fmt="{got} is wrong, expected {expected}")
+Traceback (most recent call last):
+  ...
+AssertionError: 14 is wrong, expected 13
