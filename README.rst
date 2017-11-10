@@ -1,8 +1,12 @@
 Python Asserts
 ==============
 
+.. image:: https://img.shields.io/pypi/l/asserts.svg
+   :target: https://pypi.python.org/pypi/asserts/
 .. image:: https://img.shields.io/github/release/srittau/python-asserts/all.svg
    :target: https://github.com/srittau/python-asserts/releases/
+.. image:: https://img.shields.io/pypi/v/asserts.svg
+   :target: https://pypi.python.org/pypi/asserts/
 .. image:: https://travis-ci.org/srittau/python-asserts.svg?branch=master
    :target: https://travis-ci.org/srittau/python-asserts
 
