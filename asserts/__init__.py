@@ -833,6 +833,11 @@ def assert_raises_regex(exception, regex, msg_fmt="{msg}"):
 
     def test(exc):
         compiled = re.compile(regex)
+        if not exc.args:
+            msg = "{} without message".format(exception.__name__)
+            fail(msg_fmt.format(
+                msg=msg, text=None, pattern=compiled.pattern,
+                exc_type=exception, exc_name=exception.__name__))
         text = exc.args[0]
         if not compiled.search(text):
             msg = "{!r} does not match {!r}".format(text, compiled.pattern)

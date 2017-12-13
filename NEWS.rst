@@ -1,6 +1,11 @@
 News in asserts 0.8.1
 =====================
 
+Bug Fixes
+---------
+
+* `assert_raises_regex()`: Handle exceptions without any message correctly.
+
 News in asserts 0.8.0
 =====================
 

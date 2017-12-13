@@ -806,6 +806,18 @@ class AssertTest(TestCase):
             with assert_raises_regex(KeyError, r"test", msg_fmt=msg_fmt):
                 pass
 
+    def test_assert_raises_regex__no_message__default_message(self):
+        with _assert_raises_assertion("KeyError without message"):
+            with assert_raises_regex(KeyError, r"test"):
+                raise KeyError()
+
+    def test_assert_raises_regex__no_message__custom_message(self):
+        expected = "KeyError without message;KeyError;KeyError;None;test"
+        with _assert_raises_assertion(expected):
+            msg_fmt = "{msg};{exc_type.__name__};{exc_name};{text!r};{pattern}"
+            with assert_raises_regex(KeyError, r"test", msg_fmt=msg_fmt):
+                raise KeyError()
+
     def test_assert_raises_regex__wrong_exception_raised(self):
         try:
             with assert_raises_regex(IndexError, "test message"):
