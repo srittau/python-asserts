@@ -1,6 +1,11 @@
 News in asserts 0.8.2
 =====================
 
+Improvements
+------------
+
+* Add a py.typed file to signal that this package supports type hints.
+
 News in asserts 0.8.1
 =====================
 
