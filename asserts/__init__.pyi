@@ -1,7 +1,8 @@
 import datetime
 
+from types import TracebackType
 from typing import \
-    Any, Container, List, Type, Callable, Tuple, Union, ContextManager, \
+    Any, Container, Type, Callable, Tuple, Union, ContextManager, \
     Pattern, Optional, Iterable
 
 class AssertRaisesContext:
@@ -9,7 +10,9 @@ class AssertRaisesContext:
     msg_fmt = ...  # type: str
     def __init__(self, exception: Type[BaseException], msg_fmt: str = ...) -> None: ...
     def __enter__(self) -> AssertRaisesContext: ...
-    def __exit__(self, exc_type: Type[BaseException], exc_val: BaseException, exc_tb: Any) -> None: ...
+    def __exit__(self, exc_type: Optional[Type[BaseException]],
+                 exc_val: Optional[BaseException],
+                 exc_tb: Optional[TracebackType]) -> Optional[bool]: ...
     def format_message(self, default_msg: str) -> str: ...
     def add_test(self, cb: Callable[[BaseException], None]) -> None: ...
 

@@ -1,6 +1,11 @@
 News in asserts 0.8.3
 =====================
 
+Bug Fixes
+---------
+
+* Fix type signature of `AssertRaisesContext.__exit__()`.
+
 News in asserts 0.8.2
 =====================
 
