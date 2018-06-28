@@ -1,6 +1,11 @@
 News in asserts 0.8.4
 =====================
 
+Bug Fixes
+---------
+
+* Improve type annotations for Python 2.
+
 News in asserts 0.8.3
 =====================
 
