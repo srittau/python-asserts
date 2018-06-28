@@ -6,8 +6,8 @@ from typing import \
     Pattern, Optional, Iterable
 
 class AssertRaisesContext:
-    exception = ...  # type: Type[BaseException]
-    msg_fmt = ...  # type: str
+    exception: Type[BaseException]
+    msg_fmt: str
     def __init__(self, exception: Type[BaseException], msg_fmt: str = ...) -> None: ...
     def __enter__(self) -> AssertRaisesContext: ...
     def __exit__(self, exc_type: Optional[Type[BaseException]],
@@ -17,11 +17,11 @@ class AssertRaisesContext:
     def add_test(self, cb: Callable[[BaseException], None]) -> None: ...
 
 class AssertRaisesErrnoContext(AssertRaisesContext):
-    expected_errno = ...  # type: int
+    expected_errno: int
     def __init__(self, exception: Type[BaseException], expected_errno: int, msg_fmt: str = ...) -> None: ...
 
 class AssertRaisesRegexContext(AssertRaisesContext):
-    pattern = ...  # type: str
+    pattern: str
     def __init__(self, exception: Type[BaseException], pattern: str, msg_fmt: str = ...) -> None: ...
 
 class AssertWarnsContext:
@@ -32,7 +32,7 @@ class AssertWarnsContext:
     def add_test(self, cb: Callable[[Warning], None]) -> None: ...
 
 class AssertWarnsRegexContext(AssertWarnsContext):
-    pattern = ...  # type: str
+    pattern: str
     def __init__(self, warning_class: Type[Warning], msg_fmt: str = ...) -> None: ...
 
 def fail(msg: str = ...) -> None: ...
