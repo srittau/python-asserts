@@ -1,6 +1,11 @@
 News in asserts 0.8.2
 =====================
 
+Improvements
+------------
+
+* `fail()` is now marked with `NoReturn` in type stub.
+
 News in asserts 0.8.1
 =====================
 

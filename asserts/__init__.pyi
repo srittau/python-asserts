@@ -1,8 +1,8 @@
 import datetime
 
 from typing import \
-    Any, Container, List, Type, Callable, Tuple, Union, ContextManager, \
-    Pattern, Optional, Iterable
+    Any, Container, Type, Callable, Tuple, Union, ContextManager, \
+    Pattern, Optional, Iterable, NoReturn
 
 class AssertRaisesContext:
     exception = ...  # type: Type[BaseException]
@@ -32,7 +32,7 @@ class AssertWarnsRegexContext(AssertWarnsContext):
     pattern = ...  # type: str
     def __init__(self, warning_class: Type[Warning], msg_fmt: str = ...) -> None: ...
 
-def fail(msg: str = ...) -> None: ...
+def fail(msg: str = ...) -> NoReturn: ...
 def assert_true(expr: Any, msg_fmt: str = ...) -> None: ...
 def assert_false(expr: Any, msg_fmt: str = ...) -> None: ...
 def assert_boolean_true(expr: Any, msg_fmt: str = ...) -> None: ...
