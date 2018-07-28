@@ -19,6 +19,7 @@ setup(
     packages=["asserts"],
     package_data={"asserts": ["py.typed", "*.pyi"]},
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+    tests_require=["mypy >= 0.620"],
     license="MIT",
     classifiers=[
         "Development Status :: 3 - Alpha",
