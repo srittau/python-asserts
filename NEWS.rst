@@ -1,10 +1,31 @@
-News in asserts 0.8.2
+News in asserts 0.8.4
 =====================
 
 Improvements
 ------------
 
 * `fail()` is now marked with `NoReturn` in type stub.
+
+Bug Fixes
+---------
+
+* Improve type annotations for Python 2.
+
+News in asserts 0.8.3
+=====================
+
+Bug Fixes
+---------
+
+* Fix type signature of `AssertRaisesContext.__exit__()`.
+
+News in asserts 0.8.2
+=====================
+
+Improvements
+------------
+
+* Add a py.typed file to signal that this package supports type hints.
 
 News in asserts 0.8.1
 =====================
