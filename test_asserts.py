@@ -41,7 +41,6 @@ from asserts import (
 
 
 class _DummyObject(object):
-
     def __init__(self, value="x"):
         self.value = value
 
@@ -253,7 +252,7 @@ class AssertTest(TestCase):
 
     def test_assert_almost_equal__wrong_types(self):
         try:
-            assert_almost_equal("5", "5")
+            assert_almost_equal("5", "5")  # type: ignore
         except TypeError:
             pass
         else:
@@ -336,7 +335,7 @@ class AssertTest(TestCase):
 
     def test_assert_not_almost_equal__wrong_types(self):
         try:
-            assert_not_almost_equal("5", "5")
+            assert_not_almost_equal("5", "5")  # type: ignore
         except TypeError:
             pass
         else:
@@ -643,8 +642,7 @@ class AssertTest(TestCase):
 
     def test_assert_has_attr__has_attribute(self):
         d = _DummyObject()
-        d.foo = 5
-        assert_has_attr(d, "foo")
+        assert_has_attr(d, "value")
 
     def test_assert_has_attr__does_not_have_attribute__default_message(self):
         d = _DummyObject()
@@ -961,20 +959,22 @@ class AssertTest(TestCase):
                 warn("baz", FutureWarning)
 
     def test_assert_warns__warning_handler_deinstalled_on_success(self):
-        with catch_warnings(record=1) as warnings:
+        with catch_warnings(record=True) as warnings:
             with assert_warns(UserWarning):
                 warn("foo", UserWarning)
+            assert warnings is not None
             assert_equal(0, len(warnings))
             warn("bar", UserWarning)
             assert_equal(1, len(warnings))
 
     def test_assert_warns__warning_handler_deinstalled_on_failure(self):
-        with catch_warnings(record=1) as warnings:
+        with catch_warnings(record=True) as warnings:
             try:
                 with assert_warns(UserWarning):
                     pass
             except AssertionError:
                 pass
+            assert warnings is not None
             assert_equal(0, len(warnings))
             warn("bar", UserWarning)
             assert_equal(1, len(warnings))
@@ -1016,20 +1016,22 @@ class AssertTest(TestCase):
                 warn("baz", FutureWarning)
 
     def test_assert_warns_regex__warning_handler_deinstalled_on_success(self):
-        with catch_warnings(record=1) as warnings:
+        with catch_warnings(record=True) as warnings:
             with assert_warns_regex(UserWarning, r"foo"):
                 warn("foo", UserWarning)
+            assert warnings is not None
             assert_equal(0, len(warnings))
             warn("bar", UserWarning)
             assert_equal(1, len(warnings))
 
     def test_assert_warns_regex__warning_handler_deinstalled_on_failure(self):
-        with catch_warnings(record=1) as warnings:
+        with catch_warnings(record=True) as warnings:
             try:
                 with assert_warns_regex(UserWarning, r""):
                     pass
             except AssertionError:
                 pass
+            assert warnings is not None
             assert_equal(0, len(warnings))
             warn("bar", UserWarning)
             assert_equal(1, len(warnings))
