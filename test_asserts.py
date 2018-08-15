@@ -37,7 +37,7 @@ from asserts import (
     assert_raises_errno,
     assert_succeeds,
     assert_warns,
-    assert_warns_regex)
+    assert_warns_regex, assert_dict_equal)
 
 
 class _DummyObject(object):
@@ -186,6 +186,10 @@ class AssertTest(TestCase):
     def test_assert_equal__not_equal__custom_message(self):
         with _assert_raises_assertion("'string' != 55;'string';55"):
             assert_equal("string", 55, "{msg};{first!r};{second!r}")
+
+    def test_assert_equal__dict(self):
+        with _assert_raises_assertion("key 'foo' missing from right dict"):
+            assert_equal({"foo": 5}, {})
 
     # assert_not_equal()
 
@@ -364,6 +368,74 @@ class AssertTest(TestCase):
             pass
         else:
             raise AssertionError("ValueError not raised")
+
+    # assert_dict_equal()
+
+    def test_assert_dict_equal__empty_dicts(self):
+        assert_dict_equal({}, {})
+
+    def test_assert_dict_equal__dicts_are_equal(self):
+        assert_dict_equal({"foo": 5}, {"foo": 5})
+
+    def test_assert_dict_equal__one_key_missing_from_right(self):
+        with _assert_raises_assertion("key 'foo' missing from right dict"):
+            assert_dict_equal({"bar": 10, "foo": 5}, {"bar": 10})
+
+    def test_assert_dict_equal__multiple_keys_missing_from_right(self):
+        with _assert_raises_assertion(
+                "keys 'bar', 'foo' missing from right dict"):
+            assert_dict_equal({"foo": 5, "bar": 10, "baz": 15}, {"baz": 15})
+
+    def test_assert_dict_equal__one_key_missing_from_left(self):
+        with _assert_raises_assertion("extra key 'foo' in right dict"):
+            assert_dict_equal({"bar": 10}, {"bar": 10, "foo": 5})
+
+    def test_assert_dict_equal__multiple_keys_missing_from_left(self):
+        with _assert_raises_assertion("extra keys 'bar', 'foo' in right dict"):
+            assert_dict_equal({"baz": 15}, {"foo": 5, "bar": 10, "baz": 15})
+
+    def test_assert_dict_equal__values_do_not_match(self):
+        with _assert_raises_assertion("key 'foo' differs: 15 != 10"):
+            assert_dict_equal({"foo": 15}, {"foo": 10})
+
+    def test_assert_dict_equal__not_string_keys(self):
+        with _assert_raises_assertion("key 10 missing from right dict"):
+            assert_dict_equal({10: "foo"}, {})
+        with _assert_raises_assertion(
+                "keys 'foo', 5 missing from right dict"):
+            assert_dict_equal({5: "", "foo": ""}, {})
+        with _assert_raises_assertion("extra key 10 in right dict"):
+            assert_dict_equal({}, {10: "foo"})
+        with _assert_raises_assertion("extra keys 'foo', 5 in right dict"):
+            assert_dict_equal({}, {5: "", "foo": ""})
+
+    def test_assert_dict_equal__message_precedence(self):
+        with _assert_raises_assertion("key 'foo' missing from right dict"):
+            assert_dict_equal({"foo": "", "bar": "", "baz": 5},
+                              {"bar": "", "baz": 10, "extra": ""})
+        with _assert_raises_assertion("extra key 'extra' in right dict"):
+            assert_dict_equal({"bar": "", "baz": 5},
+                              {"bar": "", "baz": 10, "extra": ""})
+
+    def test_assert_dict_equal__custom_key_message(self):
+        with _assert_raises_assertion(
+                "key 'foo' missing from right dict;"
+                "{'foo': ''};{'bar': ''};['foo'];['bar']"):
+            assert_dict_equal(
+                {"foo": ""}, {"bar": ""},
+                key_msg_fmt="{msg};{first!r};{second!r};"
+                            "{missing_keys!r};{extra_keys!r}"
+            )
+
+    def test_assert_dict_equal__custom_value_message(self):
+        with _assert_raises_assertion(
+                "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};"
+                "'foo';5;10"):
+            assert_dict_equal(
+                {"foo": 5}, {"foo": 10},
+                value_msg_fmt="{msg};{first!r};{second!r};"
+                              "{key!r};{first_value};{second_value}"
+            )
 
     # assert_less()
 
