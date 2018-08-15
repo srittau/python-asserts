@@ -1,6 +1,11 @@
 News in asserts 0.8.4
 =====================
 
+API Additions
+-------------
+
+* Add ``assert_dict_equal()``.
+
 Improvements
 ------------
 

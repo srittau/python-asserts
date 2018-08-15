@@ -290,6 +290,71 @@ def assert_not_almost_equal(first, second, msg_fmt="{msg}",
                             places=places, delta=delta))
 
 
+def assert_dict_equal(first, second, key_msg_fmt="{msg}",
+                      value_msg_fmt="{msg}"):
+    """Fail unless first dictionary equals second.
+
+    The dictionaries are considered equal, if they both contain the same
+    keys, and their respective values are also equal.
+
+    >>> assert_equal({"foo": 5}, {"foo": 5})
+    >>> assert_equal({"foo": 5}, {})
+    Traceback (most recent call last):
+        ...
+    AssertionError: key 'foo' missing from right dict
+
+    The following key_msg_fmt arguments are supported, if the keys do not
+    match:
+    * msg - the default error message
+    * first - the first dict
+    * second - the second dict
+    * missing_keys - list of keys missing from right
+    * extra_keys - list of keys missing from left
+
+    The following value_msg_fmt arguments are supported, if a value does not
+    match:
+    * msg - the default error message
+    * first - the first dict
+    * second - the second dict
+    * key - the key where the value does not match
+    * first_value - the value in the first dict
+    * second_value - the value in the second dict
+    """
+    first_keys = set(first.keys())
+    second_keys = set(second.keys())
+    missing_keys = list(first_keys - second_keys)
+    extra_keys = list(second_keys - first_keys)
+    if missing_keys or extra_keys:
+        if missing_keys:
+            if len(missing_keys) == 1:
+                msg = "key {!r} missing from right dict".format(missing_keys[0])
+            else:
+                keys = ", ".join(sorted(repr(k) for k in missing_keys))
+                msg = "keys {} missing from right dict".format(keys)
+        else:
+            if len(extra_keys) == 1:
+                msg = "extra key {!r} in right dict".format(extra_keys[0])
+            else:
+                keys = ", ".join(sorted(repr(k) for k in extra_keys))
+                msg = "extra keys {} in right dict".format(keys)
+        if key_msg_fmt:
+            msg = key_msg_fmt.format(
+                msg=msg, first=first, second=second,
+                missing_keys=missing_keys, extra_keys=extra_keys)
+        raise AssertionError(msg)
+    for key in first:
+        first_value = first[key]
+        second_value = second[key]
+        msg = "key '{}' differs: {!r} != {!r}".format(
+            key, first_value, second_value)
+        if value_msg_fmt:
+            msg = value_msg_fmt.format(
+                msg=msg, first=first, second=second,
+                key=key, first_value=first_value, second_value=second_value)
+        msg = msg.replace("{", "{{").replace("}", "}}")
+        assert_equal(first_value, second_value, msg_fmt=msg)
+
+
 def assert_less(first, second, msg_fmt="{msg}"):
     """Fail if first is not less than second.
 
