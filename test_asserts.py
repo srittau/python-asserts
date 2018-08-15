@@ -187,6 +187,10 @@ class AssertTest(TestCase):
         with _assert_raises_assertion("'string' != 55;'string';55"):
             assert_equal("string", 55, "{msg};{first!r};{second!r}")
 
+    def test_assert_equal__dict(self):
+        with _assert_raises_assertion("key 'foo' missing from right dict"):
+            assert_equal({"foo": 5}, {})
+
     # assert_not_equal()
 
     def test_assert_not_equal__not_equal(self):

@@ -9,7 +9,8 @@ API Additions
 Improvements
 ------------
 
-* `fail()` is now marked with `NoReturn` in type stub.
+* ``assert_equal()``: Use ``assert_dict_equal()`` if applicable.
+* ``fail()`` is now marked with ``NoReturn`` in type stub.
 
 Bug Fixes
 ---------

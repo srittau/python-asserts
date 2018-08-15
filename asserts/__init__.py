@@ -165,7 +165,9 @@ def assert_equal(first, second, msg_fmt="{msg}"):
     * second - the second argument
     """
 
-    if not first == second:
+    if isinstance(first, dict) and isinstance(second, dict):
+        assert_dict_equal(first, second, msg_fmt)
+    elif not first == second:
         msg = "{!r} != {!r}".format(first, second)
         fail(msg_fmt.format(msg=msg, first=first, second=second))
 
