@@ -357,6 +357,62 @@ def assert_dict_equal(first, second, key_msg_fmt="{msg}",
         assert_equal(first_value, second_value, msg_fmt=msg)
 
 
+def assert_dict_superset(first, second, key_msg_fmt="{msg}",
+                         value_msg_fmt="{msg}"):
+    """Fail unless second dictionary is a superset of the first.
+
+    The second dictionary must contain all keys of the first and their
+    values are equal (or a superset in case of dicts). But the second
+    dictionary can contain additional keys.
+
+    >>> assert_equal({"foo": 5}, {"foo": 5, "bar": 10})
+    >>> assert_equal({"foo": 5}, {})
+    Traceback (most recent call last):
+        ...
+    AssertionError: key 'foo' missing from right dict
+
+    The following key_msg_fmt arguments are supported, if the keys do not
+    match:
+    * msg - the default error message
+    * first - the first dict
+    * second - the second dict
+    * missing_keys - list of keys missing from right
+
+    The following value_msg_fmt arguments are supported, if a value does not
+    match:
+    * msg - the default error message
+    * first - the first dict
+    * second - the second dict
+    * key - the key where the value does not match
+    * first_value - the value in the first dict
+    * second_value - the value in the second dict
+    """
+    first_keys = set(first.keys())
+    second_keys = set(second.keys())
+    missing_keys = list(first_keys - second_keys)
+    if missing_keys:
+        if len(missing_keys) == 1:
+            msg = "key {!r} missing from right dict".format(missing_keys[0])
+        else:
+            keys = ", ".join(sorted(repr(k) for k in missing_keys))
+            msg = "keys {} missing from right dict".format(keys)
+        if key_msg_fmt:
+            msg = key_msg_fmt.format(
+                msg=msg, first=first, second=second, missing_keys=missing_keys)
+        raise AssertionError(msg)
+    for key in first:
+        first_value = first[key]
+        second_value = second[key]
+        msg = "key '{}' differs: {!r} != {!r}".format(
+            key, first_value, second_value)
+        if value_msg_fmt:
+            msg = value_msg_fmt.format(
+                msg=msg, first=first, second=second,
+                key=key, first_value=first_value, second_value=second_value)
+        msg = msg.replace("{", "{{").replace("}", "}}")
+        assert_equal(first_value, second_value, msg_fmt=msg)
+
+
 def assert_less(first, second, msg_fmt="{msg}"):
     """Fail if first is not less than second.
 

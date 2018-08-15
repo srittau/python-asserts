@@ -16,6 +16,8 @@ from asserts import (
     assert_not_equal,
     assert_almost_equal,
     assert_not_almost_equal,
+    assert_dict_equal,
+    assert_dict_superset,
     assert_less,
     assert_less_equal,
     assert_greater,
@@ -37,7 +39,8 @@ from asserts import (
     assert_raises_errno,
     assert_succeeds,
     assert_warns,
-    assert_warns_regex, assert_dict_equal)
+    assert_warns_regex,
+)
 
 
 class _DummyObject(object):
@@ -432,6 +435,61 @@ class AssertTest(TestCase):
                 "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};"
                 "'foo';5;10"):
             assert_dict_equal(
+                {"foo": 5}, {"foo": 10},
+                value_msg_fmt="{msg};{first!r};{second!r};"
+                              "{key!r};{first_value};{second_value}"
+            )
+
+    # assert_dict_superset()
+
+    def test_assert_dict_superset__empty_dicts(self):
+        assert_dict_superset({}, {})
+
+    def test_assert_dict_superset__dicts_are_equal(self):
+        assert_dict_superset({"foo": 5}, {"foo": 5})
+
+    def test_assert_dict_superset__dicts_is_superset(self):
+        assert_dict_superset({"foo": 5}, {"foo": 5, "bar": 10})
+
+    def test_assert_dict_superset__one_key_missing_from_right(self):
+        with _assert_raises_assertion("key 'foo' missing from right dict"):
+            assert_dict_superset({"bar": 10, "foo": 5}, {"bar": 10})
+
+    def test_assert_dict_superset__multiple_keys_missing_from_right(self):
+        with _assert_raises_assertion(
+                "keys 'bar', 'foo' missing from right dict"):
+            assert_dict_superset({"foo": 5, "bar": 10, "baz": 15}, {"baz": 15})
+
+    def test_assert_dict_superset__values_do_not_match(self):
+        with _assert_raises_assertion("key 'foo' differs: 15 != 10"):
+            assert_dict_superset({"foo": 15}, {"foo": 10, "bar": 15})
+
+    def test_assert_dict_superset__not_string_keys(self):
+        with _assert_raises_assertion("key 10 missing from right dict"):
+            assert_dict_superset({10: "foo"}, {})
+        with _assert_raises_assertion(
+                "keys 'foo', 5 missing from right dict"):
+            assert_dict_superset({5: "", "foo": ""}, {})
+
+    def test_assert_dict_superset__message_precedence(self):
+        with _assert_raises_assertion("key 'foo' missing from right dict"):
+            assert_dict_superset({"foo": "", "bar": 5}, {"bar": 1})
+
+    def test_assert_dict_superset__custom_key_message(self):
+        with _assert_raises_assertion(
+                "key 'foo' missing from right dict;"
+                "{'foo': ''};{'bar': ''};['foo']"):
+            assert_dict_superset(
+                {"foo": ""}, {"bar": ""},
+                key_msg_fmt="{msg};{first!r};{second!r};"
+                            "{missing_keys!r}"
+            )
+
+    def test_assert_dict_superset__custom_value_message(self):
+        with _assert_raises_assertion(
+                "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};"
+                "'foo';5;10"):
+            assert_dict_superset(
                 {"foo": 5}, {"foo": 10},
                 value_msg_fmt="{msg};{first!r};{second!r};"
                               "{key!r};{first_value};{second_value}"

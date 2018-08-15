@@ -5,6 +5,7 @@ API Additions
 -------------
 
 * Add ``assert_dict_equal()``.
+* Add ``assert_dict_superset()``.
 
 Improvements
 ------------
