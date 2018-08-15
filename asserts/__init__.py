@@ -299,8 +299,8 @@ def assert_dict_equal(first, second, key_msg_fmt="{msg}",
     The dictionaries are considered equal, if they both contain the same
     keys, and their respective values are also equal.
 
-    >>> assert_equal({"foo": 5}, {"foo": 5})
-    >>> assert_equal({"foo": 5}, {})
+    >>> assert_dict_equal({"foo": 5}, {"foo": 5})
+    >>> assert_dict_equal({"foo": 5}, {})
     Traceback (most recent call last):
         ...
     AssertionError: key 'foo' missing from right dict
@@ -365,8 +365,8 @@ def assert_dict_superset(first, second, key_msg_fmt="{msg}",
     values are equal (or a superset in case of dicts). But the second
     dictionary can contain additional keys.
 
-    >>> assert_equal({"foo": 5}, {"foo": 5, "bar": 10})
-    >>> assert_equal({"foo": 5}, {})
+    >>> assert_dict_superset({"foo": 5}, {"foo": 5, "bar": 10})
+    >>> assert_dict_superset({"foo": 5}, {})
     Traceback (most recent call last):
         ...
     AssertionError: key 'foo' missing from right dict
