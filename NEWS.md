@@ -7,13 +7,13 @@ News in asserts 0.8.5
 API Additions
 -------------
 
-* Add ``assert_dict_equal()``.
-* Add ``assert_dict_superset()``.
+* Add `assert_dict_equal()`.
+* Add `assert_dict_superset()`.
 
 Improvements
 ------------
 
-* ``assert_equal()``: Use ``assert_dict_equal()`` if applicable.
+* `assert_equal()`: Use `assert_dict_equal()` if applicable.
 
 News in asserts 0.8.4
 =====================
@@ -21,7 +21,7 @@ News in asserts 0.8.4
 Improvements
 ------------
 
-* ``fail()`` is now marked with ``NoReturn`` in type stub.
+* `fail()` is now marked with `NoReturn` in type stub.
 
 Bug Fixes
 ---------
