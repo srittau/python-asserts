@@ -1,4 +1,4 @@
-News in asserts 0.8.4
+News in asserts 0.8.5
 =====================
 
 API Additions
@@ -11,6 +11,13 @@ Improvements
 ------------
 
 * ``assert_equal()``: Use ``assert_dict_equal()`` if applicable.
+
+News in asserts 0.8.4
+=====================
+
+Improvements
+------------
+
 * ``fail()`` is now marked with ``NoReturn`` in type stub.
 
 Bug Fixes
