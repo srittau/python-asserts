@@ -1,6 +1,11 @@
 News in asserts 0.8.6
 =====================
 
+Improvements
+------------
+
+* Add support for Python 3.7 (contributed by Frank Niessink).
+
 News in asserts 0.8.5
 =====================
 
