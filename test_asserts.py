@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+
 import re
 import sys
+from collections import OrderedDict
 from datetime import datetime, timedelta
 from unittest import TestCase
 from warnings import warn, catch_warnings
@@ -40,6 +43,7 @@ from asserts import (
     assert_succeeds,
     assert_warns,
     assert_warns_regex,
+    assert_json_subset,
 )
 
 
@@ -80,7 +84,6 @@ def _assert_raises_assertion(expected_message):
 
 
 class AssertTest(TestCase):
-
     _type_string = "type" if sys.version_info[0] < 3 else "class"
 
     # fail()
@@ -1193,3 +1196,112 @@ class AssertTest(TestCase):
             msg_fmt = "{msg};{exc_type.__name__};{exc_name};{pattern}"
             with assert_warns_regex(UserWarning, r"foo.*bar", msg_fmt=msg_fmt):
                 pass
+
+    # assert_json_subset()
+
+    def test_assert_json_subset__different_types(self):
+        with _assert_raises_assertion("element $ differs: {} != []"):
+            assert_json_subset({}, [])
+
+    def test_assert_json_subset__empty_objects(self):
+        with assert_succeeds(AssertionError):
+            assert_json_subset({}, {})
+
+    def test_assert_json_subset__objects_equal(self):
+        with assert_succeeds(AssertionError):
+            assert_json_subset({"foo": 3, "bar": "abc"},
+                               {"bar": "abc", "foo": 3})
+
+    def test_assert_json_subset__one_key_missing_from_first_object(self):
+        with assert_succeeds(AssertionError):
+            assert_json_subset({"foo": 3}, {"foo": 3, "bar": 3})
+
+    def test_assert_json_subset__one_key_missing_from_second_object(self):
+        with _assert_raises_assertion("element 'bar' missing from element $"):
+            assert_json_subset({"foo": 3, "bar": 3}, {"foo": 3})
+
+    def test_assert_json_subset__multiple_keys_missing_from_second_object(
+            self):
+        with _assert_raises_assertion(
+                "elements 'bar', 'baz', and 'foo' missing from element $"):
+            assert_json_subset({"foo": 3, "bar": 3, "baz": 3}, {})
+
+    def test_assert_json_subset__value_differs(self):
+        with _assert_raises_assertion("element $['foo'] differs: 3 != 4"):
+            assert_json_subset({"foo": 3}, {"foo": 4})
+
+    def test_assert_json_subset__empty_lists(self):
+        with assert_succeeds(AssertionError):
+            assert_json_subset([], [])
+
+    def test_assert_json_subset__different_sized_lists(self):
+        with _assert_raises_assertion("JSON array $ differs in size: 2 != 1"):
+            assert_json_subset([1, 2], [1])
+        with _assert_raises_assertion("JSON array $ differs in size: 1 != 2"):
+            assert_json_subset([1], [1, 2])
+
+    def test_assert_json_subset__different_list_values(self):
+        with _assert_raises_assertion("element $[0] differs: {} != []"):
+            assert_json_subset([{}], [[]])
+
+    def test_assert_json_subset__fundamental_types_differ(self):
+        with _assert_raises_assertion("element $[0] differs: 1 != 'foo'"):
+            assert_json_subset([1], ["foo"])
+
+    def test_assert_json_subset__fundamental_values_differ(self):
+        with _assert_raises_assertion("element $[0] differs: 'bar' != 'foo'"):
+            assert_json_subset(["bar"], ["foo"])
+
+    def test_assert_json_subset__none(self):
+        with assert_succeeds(AssertionError):
+            assert_json_subset([None], [None])
+        with _assert_raises_assertion("element $[0] differs: 42 != None"):
+            assert_json_subset([42], [None])
+        with _assert_raises_assertion("element $[0] differs: None != 42"):
+            assert_json_subset([None], [42])
+
+    def test_assert_json_subset__compare_int_and_float(self):
+        with assert_succeeds(AssertionError):
+            assert_json_subset([42], [42.0])
+            assert_json_subset([42.0], [42])
+
+    def test_assert_json_subset__unsupported_type(self):
+        msg = "unsupported type <{} 'set'>".format(self._type_string)
+        with assert_raises_regex(TypeError, msg):
+            assert_json_subset([set()], [set()])
+
+    def test_assert_json_subset__subtypes(self):
+        with assert_succeeds(AssertionError):
+            assert_json_subset(OrderedDict(), {})
+            assert_json_subset({}, OrderedDict())
+
+    def test_assert_json_subset__second_is_string(self):
+        with assert_succeeds(AssertionError):
+            assert_json_subset({}, "{  }")
+
+    def test_assert_json_subset__second_is_unsupported_json_string(self):
+        msg = "second must decode to dict or list, not <{} 'int'>".format(
+            self._type_string)
+        with _assert_raises_assertion(msg):
+            assert_json_subset({}, "42")
+
+    def test_assert_json_subset__second_is_invalid_json_string(self):
+        try:
+            from json import JSONDecodeError
+        except ImportError:
+            JSONDecodeError = ValueError  # type: ignore
+        with assert_raises(JSONDecodeError):
+            assert_json_subset({}, ",")
+
+    def test_assert_json_subset__second_is_bytes(self):
+        with assert_succeeds(AssertionError):
+            assert_json_subset([u"föo"], u'["föo"]'.encode("utf-8"))
+
+    def test_assert_json_subset__second_is_latin1_bytes(self):
+        with assert_raises(UnicodeDecodeError):
+            assert_json_subset([u"föo"], u'["föo"]'.encode("iso-8859-1"))
+
+    def test_assert_json_subset__invalid_type(self):
+        with assert_raises_regex(
+                TypeError, "second must be dict, list, str, or bytes"):
+            assert_json_subset({}, 42)  # type: ignore

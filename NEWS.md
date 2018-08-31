@@ -1,3 +1,11 @@
+News in asserts 0.9.0
+=====================
+
+API Additions
+-------------
+
+* Add `assert_json_subset()`.
+
 News in asserts 0.8.6
 =====================
 

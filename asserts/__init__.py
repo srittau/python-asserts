@@ -21,7 +21,9 @@ assertions, possibly using assertions from this package as a basis.
 """
 
 import re
+import sys
 from datetime import datetime, timedelta
+from json import loads as json_loads
 from warnings import catch_warnings
 
 
@@ -1197,3 +1199,162 @@ def assert_warns_regex(warning_type, regex, msg_fmt="{msg}"):
     context = AssertWarnsRegexContext(warning_type, regex, msg_fmt)
     context.add_test(test)
     return context
+
+
+if sys.version_info >= (3,):
+    _Str = str
+else:
+    _Str = unicode
+
+
+def assert_json_subset(first, second):
+    """Assert that a JSON object or array is a subset of another JSON object
+    or array.
+
+    The first JSON object or array must be supplied as a JSON-compatible
+    dict or list, the JSON object or array to check must be a string, an
+    UTF-8 bytes object, or a JSON-compatible list or dict.
+
+    A JSON non-object, non-array value is the subset of another JSON value,
+    if they are equal.
+
+    A JSON object is the subset of another JSON object if for each name/value
+    pair in the former there is a name/value pair in the latter with the same
+    name. Additionally the value of the former pair must be a subset of the
+    value of the latter pair.
+
+    A JSON array is the subset of another JSON array, if they have the same
+    number of elements and each element in the former is a subset of the
+    corresponding element in the latter.
+
+    >>> assert_json_subset({}, '{}')
+    >>> assert_json_subset({}, '{"foo": "bar"}')
+    >>> assert_json_subset({"foo": "bar"}, '{}')
+    Traceback (most recent call last):
+    ...
+    AssertionError: name 'foo' missing
+    >>> assert_json_subset([1, 2], '[1, 2]')
+    >>> assert_json_subset([2, 1], '[1, 2]')
+    Traceback (most recent call last):
+    ...
+    AssertionError: element #0 differs: 2 != 1
+    >>> assert_json_subset([{}], '[{"foo": "bar"}]')
+    >>> assert_json_subset({}, "INVALID JSON")
+    Traceback (most recent call last):
+    ...
+    TypeError: invalid JSON
+    """
+
+    if not isinstance(second, (dict, list, str, bytes)):
+        raise TypeError("second must be dict, list, str, or bytes")
+    if isinstance(second, bytes):
+        second = second.decode("utf-8")
+    if isinstance(second, _Str):
+        parsed_second = json_loads(second)
+    else:
+        parsed_second = second
+
+    if not isinstance(parsed_second, (dict, list)):
+        raise AssertionError("second must decode to dict or list, not {}".
+                             format(type(parsed_second)))
+
+    comparer = _JSONComparer(_JSONPath("$"), first, parsed_second)
+    comparer.assert_()
+
+
+class _JSONComparer:
+    def __init__(self, path, expected, actual):
+        self._path = path
+        self._expected = expected
+        self._actual = actual
+
+    def assert_(self):
+        self._assert_types_are_equal()
+        if isinstance(self._expected, dict):
+            self._assert_dicts_equal()
+        elif isinstance(self._expected, list):
+            self._assert_arrays_equal()
+        else:
+            self._assert_fundamental_values_equal()
+
+    def _assert_types_are_equal(self):
+        if self._types_differ():
+            self._raise_different_values()
+
+    def _types_differ(self):
+        if self._expected is None:
+            return self._actual is not None
+        elif isinstance(self._expected, (int, float)):
+            return not isinstance(self._actual, (int, float))
+        for type_ in [bool, str, _Str, list, dict]:
+            if isinstance(self._expected, type_):
+                return not isinstance(self._actual, type_)
+        else:
+            raise TypeError("unsupported type {}".format(type(self._expected)))
+
+    def _assert_dicts_equal(self):
+        self._assert_all_expected_keys_in_actual_dict()
+        for name in self._expected:
+            self._assert_json_value_equals_with_item(name)
+
+    def _assert_all_expected_keys_in_actual_dict(self):
+        keys = set(self._expected.keys()).difference(self._actual.keys())
+        if keys:
+            self._raise_missing_element(keys)
+
+    def _assert_arrays_equal(self):
+        if len(self._expected) != len(self._actual):
+            self._raise_different_sizes()
+        for i in range(len(self._expected)):
+            self._assert_json_value_equals_with_item(i)
+
+    def _assert_json_value_equals_with_item(self, item):
+        path = self._path.append(item)
+        expected = self._expected[item]
+        actual = self._actual[item]
+        _JSONComparer(path, expected, actual).assert_()
+
+    def _assert_fundamental_values_equal(self):
+        if self._expected != self._actual:
+            self._raise_different_values()
+
+    def _raise_different_values(self):
+        self._raise_assertion_error(
+            "element {path} differs: {expected} != {actual}")
+
+    def _raise_different_sizes(self):
+        self._raise_assertion_error(
+            "JSON array {path} differs in size: "
+            "{expected_len} != {actual_len}",
+            expected_len=len(self._expected),
+            actual_len=len(self._actual))
+
+    def _raise_missing_element(self, keys):
+        if len(keys) == 1:
+            format_string = "element {elements} missing from element {path}"
+            elements = repr(next(iter(keys)))
+        else:
+            format_string = "elements {elements} missing from element {path}"
+            sorted_keys = sorted(keys)
+            elements = (", ".join(repr(k) for k in sorted_keys[:-1]) +
+                        ", and " + repr(sorted_keys[-1]))
+        self._raise_assertion_error(format_string, elements=elements)
+
+    def _raise_assertion_error(self, format_, **kwargs):
+        kwargs.update({
+            "path": self._path,
+            "expected": repr(self._expected),
+            "actual": repr(self._actual),
+        })
+        raise AssertionError(format_.format(**kwargs))
+
+
+class _JSONPath:
+    def __init__(self, path):
+        self._path = path
+
+    def __str__(self):
+        return self._path
+
+    def append(self, item):
+        return _JSONPath("{0}[{1}]".format(self._path, repr(item)))
