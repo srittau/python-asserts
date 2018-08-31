@@ -1232,17 +1232,17 @@ def assert_json_subset(first, second):
     >>> assert_json_subset({"foo": "bar"}, '{}')
     Traceback (most recent call last):
     ...
-    AssertionError: name 'foo' missing
+    AssertionError: element 'foo' missing from element $
     >>> assert_json_subset([1, 2], '[1, 2]')
     >>> assert_json_subset([2, 1], '[1, 2]')
     Traceback (most recent call last):
     ...
-    AssertionError: element #0 differs: 2 != 1
+    AssertionError: element $[0] differs: 2 != 1
     >>> assert_json_subset([{}], '[{"foo": "bar"}]')
     >>> assert_json_subset({}, "INVALID JSON")
     Traceback (most recent call last):
     ...
-    TypeError: invalid JSON
+    json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
     """
 
     if not isinstance(second, (dict, list, str, bytes)):
