@@ -533,7 +533,7 @@ def assert_regex(text, regex, msg_fmt="{msg}"):
     expression object.
 
     >>> assert_regex("Hello World!", r"llo.*rld!$")
-    >>> assert_regex("Hello World!", r"\d")
+    >>> assert_regex("Hello World!", r"\\d")
     Traceback (most recent call last):
         ...
     AssertionError: 'Hello World!' does not match '\\\\d'
@@ -986,10 +986,10 @@ def assert_raises_regex(exception, regex, msg_fmt="{msg}"):
 
     The regular expression can be a regular expression string or object.
 
-    >>> with assert_raises_regex(ValueError, r"\d+"):
+    >>> with assert_raises_regex(ValueError, r"\\d+"):
     ...     raise ValueError("Error #42")
     ...
-    >>> with assert_raises_regex(ValueError, r"\d+"):
+    >>> with assert_raises_regex(ValueError, r"\\d+"):
     ...     raise ValueError("Generic Error")
     ...
     Traceback (most recent call last):
@@ -1252,7 +1252,7 @@ def assert_warns_regex(warning_type, regex, msg_fmt="{msg}"):
     The message can be a regular expression string or object.
 
     >>> from warnings import warn
-    >>> with assert_warns_regex(UserWarning, r"#\d+"):
+    >>> with assert_warns_regex(UserWarning, r"#\\d+"):
     ...     warn("Error #42", UserWarning)
     ...
     >>> with assert_warns_regex(UserWarning, r"Expected Error"):
@@ -1280,7 +1280,7 @@ def assert_warns_regex(warning_type, regex, msg_fmt="{msg}"):
 if sys.version_info >= (3,):
     _Str = str
 else:
-    _Str = unicode
+    _Str = unicode  # noqa: F821
 
 
 def assert_json_subset(first, second):
