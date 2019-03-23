@@ -1,3 +1,12 @@
+News in asserts 0.9.1
+=====================
+
+Improvements
+------------
+
+* `AssertRaisesContext` and sub-classes are now generic over the
+  exception type.
+
 News in asserts 0.9.0
 =====================
 

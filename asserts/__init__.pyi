@@ -1,28 +1,43 @@
 import datetime
 
 from types import TracebackType
-from typing import \
-    Any, Container, Type, Callable, Tuple, Union, ContextManager, \
-    Pattern, Optional, Iterable, Text, NoReturn
+from typing import (
+    Any,
+    Callable,
+    Container,
+    ContextManager,
+    Generic,
+    Iterable,
+    NoReturn,
+    Optional,
+    Pattern,
+    Text,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+)
 
-class AssertRaisesContext:
-    exception: Type[BaseException]
+_E = TypeVar("_E", bound=BaseException)
+
+class AssertRaisesContext(Generic[_E]):
+    exception: Type[_E]
     msg_fmt: Text
-    def __init__(self, exception: Type[BaseException], msg_fmt: Text = ...) -> None: ...
+    def __init__(self, exception: Type[_E], msg_fmt: Text = ...) -> None: ...
     def __enter__(self) -> AssertRaisesContext: ...
     def __exit__(self, exc_type: Optional[Type[BaseException]],
                  exc_val: Optional[BaseException],
                  exc_tb: Optional[TracebackType]) -> Optional[bool]: ...
     def format_message(self, default_msg: Text) -> Text: ...
-    def add_test(self, cb: Callable[[BaseException], None]) -> None: ...
+    def add_test(self, cb: Callable[[_E], None]) -> None: ...
 
-class AssertRaisesErrnoContext(AssertRaisesContext):
+class AssertRaisesErrnoContext(AssertRaisesContext[_E]):
     expected_errno: int
-    def __init__(self, exception: Type[BaseException], expected_errno: int, msg_fmt: Text = ...) -> None: ...
+    def __init__(self, exception: Type[_E], expected_errno: int, msg_fmt: Text = ...) -> None: ...
 
-class AssertRaisesRegexContext(AssertRaisesContext):
+class AssertRaisesRegexContext(AssertRaisesContext[_E]):
     pattern: Text
-    def __init__(self, exception: Type[BaseException], pattern: Text, msg_fmt: Text = ...) -> None: ...
+    def __init__(self, exception: Type[_E], pattern: Text, msg_fmt: Text = ...) -> None: ...
 
 class AssertWarnsContext:
     def __init__(self, warning_class: Type[Warning], msg_fmt: Text = ...) -> None: ...
