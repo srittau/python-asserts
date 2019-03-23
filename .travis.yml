@@ -4,6 +4,7 @@ install:
 script:
   - python -m unittest test_asserts
   - if test `python --version 2>&1 | cut -d " " -f 2 | cut -d "." -f 1,2` \> 3.4; then mypy asserts test_asserts.py; fi
+  - if test `python --version 2>&1 | cut -d " " -f 2 | cut -d "." -f 1,2` \> 3.4; then flake8 asserts test_asserts.py; fi
   - if test `python --version 2>&1 | cut -d " " -f 2 | cut -d "." -f 1,2` \> 3.4; then python -m doctest asserts/__init__.py; fi
 jobs:
   include:
