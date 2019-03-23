@@ -64,7 +64,6 @@ def _assert_raises_assertion(expected_message):
     """
 
     class Context(object):
-
         def __enter__(self):
             pass
 
@@ -77,7 +76,8 @@ def _assert_raises_assertion(expected_message):
                 raise AssertionError(
                     "expected exception message {!r}, got {!r}".format(
                         expected_message, str(exc_val)
-                    ))
+                    )
+                )
             return True
 
     return Context()
@@ -164,7 +164,7 @@ class AssertTest(TestCase):
     # assert_is_not_none()
 
     def test_assert_is_not_none__string(self):
-            assert_is_not_none("")
+        assert_is_not_none("")
 
     def test_assert_is_not_none__none__default_message(self):
         with _assert_raises_assertion("expression is None"):
@@ -183,6 +183,7 @@ class AssertTest(TestCase):
         class MyClass(object):
             def __eq__(self, other):
                 return True
+
         assert_equal(MyClass(), MyClass())
 
     def test_assert_equal__not_equal__default_message(self):
@@ -246,19 +247,26 @@ class AssertTest(TestCase):
     def test_assert_almost_equal__not_similar__custom_message(self):
         with _assert_raises_assertion("5 != -5 within 7 places;5;-5;7;None"):
             assert_almost_equal(
-                5, -5, msg_fmt="{msg};{first};{second};{places};{delta!r}")
+                5, -5, msg_fmt="{msg};{first};{second};{places};{delta!r}"
+            )
 
     def test_assert_almost_equal__not_similar__places__custom_message(self):
         with _assert_raises_assertion("5 != -5 within 3 places;5;-5;3;None"):
             assert_almost_equal(
-                5, -5, places=3,
-                msg_fmt="{msg};{first};{second};{places};{delta!r}")
+                5,
+                -5,
+                places=3,
+                msg_fmt="{msg};{first};{second};{places};{delta!r}",
+            )
 
     def test_assert_almost_equal__not_similar__delta__custom_message(self):
         with _assert_raises_assertion("5 != 6 with delta=0.1;5;6;None;0.1"):
             assert_almost_equal(
-                5, 6, delta=0.1,
-                msg_fmt="{msg};{first};{second};{places!r};{delta}")
+                5,
+                6,
+                delta=0.1,
+                msg_fmt="{msg};{first};{second};{places!r};{delta}",
+            )
 
     def test_assert_almost_equal__wrong_types(self):
         try:
@@ -325,23 +333,33 @@ class AssertTest(TestCase):
 
     def test_assert_not_almost_equal__similar__custom_message(self):
         with _assert_raises_assertion(
-                "5 == 5.00000001 within 7 places;5;5.00000001;7;None"):
+            "5 == 5.00000001 within 7 places;5;5.00000001;7;None"
+        ):
             assert_not_almost_equal(
-                5, 5.00000001,
-                msg_fmt="{msg};{first};{second};{places};{delta!r}")
+                5,
+                5.00000001,
+                msg_fmt="{msg};{first};{second};{places};{delta!r}",
+            )
 
     def test_assert_not_almost_equal__similar__places__custom_message(self):
         with _assert_raises_assertion(
-                "5 == 5.0001 within 3 places;5;5.0001;3;None"):
+            "5 == 5.0001 within 3 places;5;5.0001;3;None"
+        ):
             assert_not_almost_equal(
-                5, 5.0001, places=3,
-                msg_fmt="{msg};{first};{second};{places};{delta!r}")
+                5,
+                5.0001,
+                places=3,
+                msg_fmt="{msg};{first};{second};{places};{delta!r}",
+            )
 
     def test_assert_not_almost_equal__similar__delta__custom_message(self):
         with _assert_raises_assertion("5 == 6 with delta=1.1;5;6;None;1.1"):
             assert_not_almost_equal(
-                5, 6, delta=1.1,
-                msg_fmt="{msg};{first};{second};{places!r};{delta}")
+                5,
+                6,
+                delta=1.1,
+                msg_fmt="{msg};{first};{second};{places!r};{delta}",
+            )
 
     def test_assert_not_almost_equal__wrong_types(self):
         try:
@@ -389,7 +407,8 @@ class AssertTest(TestCase):
 
     def test_assert_dict_equal__multiple_keys_missing_from_right(self):
         with _assert_raises_assertion(
-                "keys 'bar', 'foo' missing from right dict"):
+            "keys 'bar', 'foo' missing from right dict"
+        ):
             assert_dict_equal({"foo": 5, "bar": 10, "baz": 15}, {"baz": 15})
 
     def test_assert_dict_equal__one_key_missing_from_left(self):
@@ -407,8 +426,7 @@ class AssertTest(TestCase):
     def test_assert_dict_equal__not_string_keys(self):
         with _assert_raises_assertion("key 10 missing from right dict"):
             assert_dict_equal({10: "foo"}, {})
-        with _assert_raises_assertion(
-                "keys 'foo', 5 missing from right dict"):
+        with _assert_raises_assertion("keys 'foo', 5 missing from right dict"):
             assert_dict_equal({5: "", "foo": ""}, {})
         with _assert_raises_assertion("extra key 10 in right dict"):
             assert_dict_equal({}, {10: "foo"})
@@ -417,30 +435,36 @@ class AssertTest(TestCase):
 
     def test_assert_dict_equal__message_precedence(self):
         with _assert_raises_assertion("key 'foo' missing from right dict"):
-            assert_dict_equal({"foo": "", "bar": "", "baz": 5},
-                              {"bar": "", "baz": 10, "extra": ""})
+            assert_dict_equal(
+                {"foo": "", "bar": "", "baz": 5},
+                {"bar": "", "baz": 10, "extra": ""},
+            )
         with _assert_raises_assertion("extra key 'extra' in right dict"):
-            assert_dict_equal({"bar": "", "baz": 5},
-                              {"bar": "", "baz": 10, "extra": ""})
+            assert_dict_equal(
+                {"bar": "", "baz": 5}, {"bar": "", "baz": 10, "extra": ""}
+            )
 
     def test_assert_dict_equal__custom_key_message(self):
         with _assert_raises_assertion(
-                "key 'foo' missing from right dict;"
-                "{'foo': ''};{'bar': ''};['foo'];['bar']"):
+            "key 'foo' missing from right dict;"
+            "{'foo': ''};{'bar': ''};['foo'];['bar']"
+        ):
             assert_dict_equal(
-                {"foo": ""}, {"bar": ""},
+                {"foo": ""},
+                {"bar": ""},
                 key_msg_fmt="{msg};{first!r};{second!r};"
-                            "{missing_keys!r};{extra_keys!r}"
+                "{missing_keys!r};{extra_keys!r}",
             )
 
     def test_assert_dict_equal__custom_value_message(self):
         with _assert_raises_assertion(
-                "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};"
-                "'foo';5;10"):
+            "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};" "'foo';5;10"
+        ):
             assert_dict_equal(
-                {"foo": 5}, {"foo": 10},
+                {"foo": 5},
+                {"foo": 10},
                 value_msg_fmt="{msg};{first!r};{second!r};"
-                              "{key!r};{first_value};{second_value}"
+                "{key!r};{first_value};{second_value}",
             )
 
     # assert_dict_superset()
@@ -460,7 +484,8 @@ class AssertTest(TestCase):
 
     def test_assert_dict_superset__multiple_keys_missing_from_right(self):
         with _assert_raises_assertion(
-                "keys 'bar', 'foo' missing from right dict"):
+            "keys 'bar', 'foo' missing from right dict"
+        ):
             assert_dict_superset({"foo": 5, "bar": 10, "baz": 15}, {"baz": 15})
 
     def test_assert_dict_superset__values_do_not_match(self):
@@ -470,8 +495,7 @@ class AssertTest(TestCase):
     def test_assert_dict_superset__not_string_keys(self):
         with _assert_raises_assertion("key 10 missing from right dict"):
             assert_dict_superset({10: "foo"}, {})
-        with _assert_raises_assertion(
-                "keys 'foo', 5 missing from right dict"):
+        with _assert_raises_assertion("keys 'foo', 5 missing from right dict"):
             assert_dict_superset({5: "", "foo": ""}, {})
 
     def test_assert_dict_superset__message_precedence(self):
@@ -480,22 +504,24 @@ class AssertTest(TestCase):
 
     def test_assert_dict_superset__custom_key_message(self):
         with _assert_raises_assertion(
-                "key 'foo' missing from right dict;"
-                "{'foo': ''};{'bar': ''};['foo']"):
+            "key 'foo' missing from right dict;"
+            "{'foo': ''};{'bar': ''};['foo']"
+        ):
             assert_dict_superset(
-                {"foo": ""}, {"bar": ""},
-                key_msg_fmt="{msg};{first!r};{second!r};"
-                            "{missing_keys!r}"
+                {"foo": ""},
+                {"bar": ""},
+                key_msg_fmt="{msg};{first!r};{second!r};" "{missing_keys!r}",
             )
 
     def test_assert_dict_superset__custom_value_message(self):
         with _assert_raises_assertion(
-                "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};"
-                "'foo';5;10"):
+            "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};" "'foo';5;10"
+        ):
             assert_dict_superset(
-                {"foo": 5}, {"foo": 10},
+                {"foo": 5},
+                {"foo": 10},
                 value_msg_fmt="{msg};{first!r};{second!r};"
-                              "{key!r};{first_value};{second_value}"
+                "{key!r};{first_value};{second_value}",
             )
 
     # assert_less()
@@ -505,7 +531,7 @@ class AssertTest(TestCase):
         with _assert_raises_assertion("5 is not less than 5"):
             assert_less(5, 5)
         with _assert_raises_assertion("'foo' is not less than 'bar'"):
-            assert_less('foo', 'bar')
+            assert_less("foo", "bar")
         with _assert_raises_assertion("6 is not less than 5;6;5"):
             assert_less(6, 5, "{msg};{first};{second}")
 
@@ -515,8 +541,9 @@ class AssertTest(TestCase):
         assert_less_equal(4, 5)
         assert_less_equal(5, 5)
         with _assert_raises_assertion(
-                "'foo' is not less than or equal to 'bar'"):
-            assert_less_equal('foo', 'bar')
+            "'foo' is not less than or equal to 'bar'"
+        ):
+            assert_less_equal("foo", "bar")
         with _assert_raises_assertion("6 is not less than or equal to 5;6;5"):
             assert_less_equal(6, 5, "{msg};{first};{second}")
 
@@ -527,7 +554,7 @@ class AssertTest(TestCase):
         with _assert_raises_assertion("5 is not greater than 5"):
             assert_greater(5, 5)
         with _assert_raises_assertion("'bar' is not greater than 'foo'"):
-            assert_greater('bar', 'foo')
+            assert_greater("bar", "foo")
         with _assert_raises_assertion("5 is not greater than 6;5;6"):
             assert_greater(5, 6, "{msg};{first};{second}")
 
@@ -537,10 +564,12 @@ class AssertTest(TestCase):
         assert_greater_equal(5, 4)
         assert_greater_equal(5, 5)
         with _assert_raises_assertion(
-                "'bar' is not greater than or equal to 'foo'"):
-            assert_greater_equal('bar', 'foo')
+            "'bar' is not greater than or equal to 'foo'"
+        ):
+            assert_greater_equal("bar", "foo")
         with _assert_raises_assertion(
-                "5 is not greater than or equal to 6;5;6"):
+            "5 is not greater than or equal to 6;5;6"
+        ):
             assert_greater_equal(5, 6, "{msg};{first};{second}")
 
     # assert_regex()
@@ -554,27 +583,32 @@ class AssertTest(TestCase):
 
     def test_assert_regex__does_not_match_string__default_message(self):
         with _assert_raises_assertion(
-                "'This is a test text' does not match 'not found'"):
+            "'This is a test text' does not match 'not found'"
+        ):
             assert_regex("This is a test text", "not found")
 
     def test_assert_regex__does_not_match_regex__default_message(self):
         regex = re.compile(r"not found")
         with _assert_raises_assertion(
-                "'This is a test text' does not match 'not found'"):
+            "'This is a test text' does not match 'not found'"
+        ):
             assert_regex("This is a test text", regex)
 
     def test_assert_regex__does_not_match_string__custom_message(self):
         with _assert_raises_assertion(
-                "'Wrong text' does not match 'not found';"
-                "'Wrong text';'not found'"):
-            assert_regex("Wrong text", r"not found",
-                         "{msg};{text!r};{pattern!r}")
+            "'Wrong text' does not match 'not found';"
+            "'Wrong text';'not found'"
+        ):
+            assert_regex(
+                "Wrong text", r"not found", "{msg};{text!r};{pattern!r}"
+            )
 
     def test_assert_regex__does_not_match_regex__custom_message(self):
         regex = re.compile(r"not found")
         with _assert_raises_assertion(
-                "'Wrong text' does not match 'not found';'Wrong text';"
-                "'not found'"):
+            "'Wrong text' does not match 'not found';'Wrong text';"
+            "'not found'"
+        ):
             assert_regex("Wrong text", regex, "{msg};{text!r};{pattern!r}")
 
     # assert_is()
@@ -607,8 +641,7 @@ class AssertTest(TestCase):
 
     def test_assert_is_not__same__custom_message(self):
         x = _DummyObject("x")
-        with _assert_raises_assertion(
-                "both arguments refer to <Dummy>;x;x"):
+        with _assert_raises_assertion("both arguments refer to <Dummy>;x;x"):
             assert_is_not(x, x, "{msg};{first.value};{second.value}")
 
     # assert_in()
@@ -694,9 +727,9 @@ class AssertTest(TestCase):
     # assert_is_instance()
 
     def _is_instance_message(self, expr, expected_type, real_type):
-        expected_message = \
-            "{!r} is an instance of <class {}>, expected {}". \
-            format(expr, real_type, expected_type)
+        expected_message = "{!r} is an instance of <class {}>, expected {}".format(
+            expr, real_type, expected_type
+        )
         if sys.version_info[0] < 3:
             return expected_message.replace("class", "type")
         else:
@@ -711,13 +744,15 @@ class AssertTest(TestCase):
 
     def test_assert_is_instance__default_message(self):
         expected_message = self._is_instance_message(
-            "my string", "<class 'int'>", "'str'")
+            "my string", "<class 'int'>", "'str'"
+        )
         with _assert_raises_assertion(expected_message):
             assert_is_instance("my string", int)
 
     def test_assert_is_instance__custom_message_single_type(self):
         expected_message = self._is_instance_message(
-            "my string", "<class 'int'>", "'str'")
+            "my string", "<class 'int'>", "'str'"
+        )
         expected = "{};my string;(<class 'int'>,)".format(expected_message)
         expected = expected.replace("class", self._type_string)
         with _assert_raises_assertion(expected):
@@ -725,24 +760,28 @@ class AssertTest(TestCase):
 
     def test_assert_is_instance__custom_message_multiple_types(self):
         expected_message = self._is_instance_message(
-            "my string", "(<class 'int'>, <class 'float'>)", "'str'")
-        expected = \
-            "{};my string;(<class 'int'>, <class 'float'>)".format(
-                expected_message)
+            "my string", "(<class 'int'>, <class 'float'>)", "'str'"
+        )
+        expected = "{};my string;(<class 'int'>, <class 'float'>)".format(
+            expected_message
+        )
         expected = expected.replace("class", self._type_string)
         with _assert_raises_assertion(expected):
             assert_is_instance(
-                "my string", (int, float), "{msg};{obj};{types}")
+                "my string", (int, float), "{msg};{obj};{types}"
+            )
 
     # assert_not_is_instance()
 
     def _not_is_instance_message(self, obj):
-        expected_message = \
-            "{!r} is an instance of {}".format(obj, obj.__class__)
+        expected_message = "{!r} is an instance of {}".format(
+            obj, obj.__class__
+        )
         if sys.version_info[0] < 3:
             expected_message = expected_message.replace("class", "type")
             expected_message = expected_message.replace(
-                "type 'OSError'", "type 'exceptions.OSError'")
+                "type 'OSError'", "type 'exceptions.OSError'"
+            )
         return expected_message
 
     def test_assert_not_is_instance__single_type(self):
@@ -803,7 +842,8 @@ class AssertTest(TestCase):
         expected = "None is not a valid date/time;None;{}".format(dt)
         with _assert_raises_assertion(expected):
             assert_datetime_about_now(
-                None, msg_fmt="{msg};{actual!r};{now:%Y-%m-%d}")
+                None, msg_fmt="{msg};{actual!r};{now:%Y-%m-%d}"
+            )
 
     def test_assert_datetime_about_now__too_low(self):
         then = datetime.now() - timedelta(minutes=1)
@@ -819,7 +859,8 @@ class AssertTest(TestCase):
         then = datetime(1990, 4, 13, 12, 30, 15)
         expected_message = (
             r"^datetime.datetime\(1990, 4, 13, 12, 30, 15\) "
-            "is not close to current date/time$")
+            "is not close to current date/time$"
+        )
         with assert_raises_regex(AssertionError, expected_message):
             assert_datetime_about_now(then)
 
@@ -832,7 +873,8 @@ class AssertTest(TestCase):
         )
         with _assert_raises_assertion(expected):
             assert_datetime_about_now(
-                then, msg_fmt="{msg};{actual:%H:%M};{now:%Y-%m-%d}")
+                then, msg_fmt="{msg};{actual:%H:%M};{now:%Y-%m-%d}"
+            )
 
     # assert_datetime_about_now_utc()
 
@@ -849,7 +891,8 @@ class AssertTest(TestCase):
         expected = "None is not a valid date/time;None;{}".format(dt)
         with _assert_raises_assertion(expected):
             assert_datetime_about_now_utc(
-                None, msg_fmt="{msg};{actual!r};{now:%Y-%m-%d}")
+                None, msg_fmt="{msg};{actual!r};{now:%Y-%m-%d}"
+            )
 
     def test_assert_datetime_about_now_utc__too_low(self):
         then = datetime.utcnow() - timedelta(minutes=1)
@@ -865,7 +908,8 @@ class AssertTest(TestCase):
         then = datetime(1990, 4, 13, 12, 30, 15)
         expected_message = (
             r"datetime.datetime\(1990, 4, 13, 12, 30, 15\) "
-            r"is not close to current UTC date/time$")
+            r"is not close to current UTC date/time$"
+        )
         with assert_raises_regex(AssertionError, expected_message):
             assert_datetime_about_now_utc(then)
 
@@ -878,7 +922,8 @@ class AssertTest(TestCase):
         )
         with _assert_raises_assertion(expected):
             assert_datetime_about_now_utc(
-                then, msg_fmt="{msg};{actual:%H:%M};{now:%Y-%m-%d}")
+                then, msg_fmt="{msg};{actual:%H:%M};{now:%Y-%m-%d}"
+            )
 
     # assert_raises()
 
@@ -889,6 +934,7 @@ class AssertTest(TestCase):
     def test_assert_raises__raises_subclass(self):
         class MyError(IndexError):
             pass
+
         with assert_raises(IndexError):
             raise MyError()
 
@@ -901,7 +947,8 @@ class AssertTest(TestCase):
         expected = "KeyError not raised;KeyError;KeyError"
         with _assert_raises_assertion(expected):
             with assert_raises(
-                    KeyError, msg_fmt="{msg};{exc_type.__name__};{exc_name}"):
+                KeyError, msg_fmt="{msg};{exc_type.__name__};{exc_name}"
+            ):
                 pass
 
     def test_assert_raises__wrong_exception_raised(self):
@@ -971,8 +1018,10 @@ class AssertTest(TestCase):
                 raise KeyError("wrong message")
 
     def test_assert_raises_regex__wrong_error__custom_message(self):
-        expected = ("'wrong message' does not match 'test';KeyError;KeyError;"
-                    "'wrong message';test")
+        expected = (
+            "'wrong message' does not match 'test';KeyError;KeyError;"
+            "'wrong message';test"
+        )
         with _assert_raises_assertion(expected):
             msg_fmt = "{msg};{exc_type.__name__};{exc_name};{text!r};{pattern}"
             with assert_raises_regex(KeyError, r"test", msg_fmt=msg_fmt):
@@ -992,8 +1041,10 @@ class AssertTest(TestCase):
     def test_assert_raises_errno__no_exception_raised__custom_message(self):
         expected = "OSError not raised;OSError;OSError;20;None"
         with _assert_raises_assertion(expected):
-            msg_fmt = ("{msg};{exc_type.__name__};{exc_name};{expected_errno};"
-                       "{actual_errno}")
+            msg_fmt = (
+                "{msg};{exc_type.__name__};{exc_name};{expected_errno};"
+                "{actual_errno}"
+            )
             with assert_raises_errno(OSError, 20, msg_fmt=msg_fmt):
                 pass
 
@@ -1020,8 +1071,10 @@ class AssertTest(TestCase):
     def test_assert_raises_errno__wrong_errno__custom_message(self):
         expected = "wrong errno: 20 != 1;OSError;OSError;20;1"
         with _assert_raises_assertion(expected):
-            msg_fmt = ("{msg};{exc_type.__name__};{exc_name};{expected_errno};"
-                       "{actual_errno}")
+            msg_fmt = (
+                "{msg};{exc_type.__name__};{exc_name};{expected_errno};"
+                "{actual_errno}"
+            )
             with assert_raises_errno(OSError, 20, msg_fmt=msg_fmt):
                 raise OSError(1, "Test error")
 
@@ -1037,11 +1090,13 @@ class AssertTest(TestCase):
                 raise KeyError()
 
     def test_assert_succeeds__expected_exception__custom_message(self):
-        expected = \
+        expected = (
             "KeyError was unexpectedly raised;KeyError;KeyError;test error"
+        )
         with _assert_raises_assertion(expected):
-            msg_fmt = \
+            msg_fmt = (
                 "{msg};{exc_type.__name__};{exc_name};{exception.args[0]}"
+            )
             with assert_succeeds(KeyError, msg_fmt=msg_fmt):
                 raise KeyError("test error")
 
@@ -1057,8 +1112,7 @@ class AssertTest(TestCase):
     # assert_warns()
 
     def test_assert_warns__default_message(self):
-        with assert_raises_regex(AssertionError,
-                                 r"^ImportWarning not issued"):
+        with assert_raises_regex(AssertionError, r"^ImportWarning not issued"):
             with assert_warns(ImportWarning):
                 pass
 
@@ -1171,13 +1225,16 @@ class AssertTest(TestCase):
 
     def test_assert_warns_regex__not_issued__default_message(self):
         with _assert_raises_assertion(
-                "no UserWarning matching 'foo.*bar' issued"):
+            "no UserWarning matching 'foo.*bar' issued"
+        ):
             with assert_warns_regex(UserWarning, r"foo.*bar"):
                 pass
 
     def test_assert_warns_regex__not_issued__custom_message(self):
-        expected = ("no ImportWarning matching 'abc' issued;ImportWarning;"
-                    "ImportWarning;abc")
+        expected = (
+            "no ImportWarning matching 'abc' issued;ImportWarning;"
+            "ImportWarning;abc"
+        )
         with _assert_raises_assertion(expected):
             msg_fmt = "{msg};{exc_type.__name__};{exc_name};{pattern}"
             with assert_warns_regex(ImportWarning, r"abc", msg_fmt=msg_fmt):
@@ -1185,13 +1242,16 @@ class AssertTest(TestCase):
 
     def test_assert_warns_regex__wrong_message__default_message(self):
         with _assert_raises_assertion(
-                "no UserWarning matching 'foo.*bar' issued"):
+            "no UserWarning matching 'foo.*bar' issued"
+        ):
             with assert_warns_regex(UserWarning, r"foo.*bar"):
                 pass
 
     def test_assert_warns_regex__wrong_message__custom_message(self):
-        expected = ("no UserWarning matching 'foo.*bar' issued;UserWarning;"
-                    "UserWarning;foo.*bar")
+        expected = (
+            "no UserWarning matching 'foo.*bar' issued;UserWarning;"
+            "UserWarning;foo.*bar"
+        )
         with _assert_raises_assertion(expected):
             msg_fmt = "{msg};{exc_type.__name__};{exc_name};{pattern}"
             with assert_warns_regex(UserWarning, r"foo.*bar", msg_fmt=msg_fmt):
@@ -1209,8 +1269,9 @@ class AssertTest(TestCase):
 
     def test_assert_json_subset__objects_equal(self):
         with assert_succeeds(AssertionError):
-            assert_json_subset({"foo": 3, "bar": "abc"},
-                               {"bar": "abc", "foo": 3})
+            assert_json_subset(
+                {"foo": 3, "bar": "abc"}, {"bar": "abc", "foo": 3}
+            )
 
     def test_assert_json_subset__one_key_missing_from_first_object(self):
         with assert_succeeds(AssertionError):
@@ -1221,9 +1282,11 @@ class AssertTest(TestCase):
             assert_json_subset({"foo": 3, "bar": 3}, {"foo": 3})
 
     def test_assert_json_subset__multiple_keys_missing_from_second_object(
-            self):
+        self
+    ):
         with _assert_raises_assertion(
-                "elements 'bar', 'baz', and 'foo' missing from element $"):
+            "elements 'bar', 'baz', and 'foo' missing from element $"
+        ):
             assert_json_subset({"foo": 3, "bar": 3, "baz": 3}, {})
 
     def test_assert_json_subset__value_differs(self):
@@ -1281,7 +1344,8 @@ class AssertTest(TestCase):
 
     def test_assert_json_subset__second_is_unsupported_json_string(self):
         msg = "second must decode to dict or list, not <{} 'int'>".format(
-            self._type_string)
+            self._type_string
+        )
         with _assert_raises_assertion(msg):
             assert_json_subset({}, "42")
 
@@ -1303,5 +1367,6 @@ class AssertTest(TestCase):
 
     def test_assert_json_subset__invalid_type(self):
         with assert_raises_regex(
-                TypeError, "second must be dict, list, str, or bytes"):
+            TypeError, "second must be dict, list, str, or bytes"
+        ):
             assert_json_subset({}, 42)  # type: ignore

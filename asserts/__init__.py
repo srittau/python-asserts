@@ -195,7 +195,8 @@ def assert_not_equal(first, second, msg_fmt="{msg}"):
 
 
 def assert_almost_equal(
-        first, second, msg_fmt="{msg}", places=None, delta=None):
+    first, second, msg_fmt="{msg}", places=None, delta=None
+):
     """Fail if first and second are not equal after rounding.
 
     By default, the difference between first and second is rounded to
@@ -237,12 +238,16 @@ def assert_almost_equal(
         detail_msg = "within {} places".format(places)
     if not success:
         msg = "{!r} != {!r} {}".format(first, second, detail_msg)
-        fail(msg_fmt.format(msg=msg, first=first, second=second,
-                            places=places, delta=delta))
+        fail(
+            msg_fmt.format(
+                msg=msg, first=first, second=second, places=places, delta=delta
+            )
+        )
 
 
-def assert_not_almost_equal(first, second, msg_fmt="{msg}",
-                            places=None, delta=None):
+def assert_not_almost_equal(
+    first, second, msg_fmt="{msg}", places=None, delta=None
+):
     """Fail if first and second are equal after rounding.
 
     By default, the difference between first and second is rounded to
@@ -290,12 +295,16 @@ def assert_not_almost_equal(first, second, msg_fmt="{msg}",
         detail_msg = "within {} places".format(places)
     if not success:
         msg = "{!r} == {!r} {}".format(first, second, detail_msg)
-        fail(msg_fmt.format(msg=msg, first=first, second=second,
-                            places=places, delta=delta))
+        fail(
+            msg_fmt.format(
+                msg=msg, first=first, second=second, places=places, delta=delta
+            )
+        )
 
 
-def assert_dict_equal(first, second, key_msg_fmt="{msg}",
-                      value_msg_fmt="{msg}"):
+def assert_dict_equal(
+    first, second, key_msg_fmt="{msg}", value_msg_fmt="{msg}"
+):
     """Fail unless first dictionary equals second.
 
     The dictionaries are considered equal, if they both contain the same
@@ -331,7 +340,9 @@ def assert_dict_equal(first, second, key_msg_fmt="{msg}",
     if missing_keys or extra_keys:
         if missing_keys:
             if len(missing_keys) == 1:
-                msg = "key {!r} missing from right dict".format(missing_keys[0])
+                msg = "key {!r} missing from right dict".format(
+                    missing_keys[0]
+                )
             else:
                 keys = ", ".join(sorted(repr(k) for k in missing_keys))
                 msg = "keys {} missing from right dict".format(keys)
@@ -343,24 +354,35 @@ def assert_dict_equal(first, second, key_msg_fmt="{msg}",
                 msg = "extra keys {} in right dict".format(keys)
         if key_msg_fmt:
             msg = key_msg_fmt.format(
-                msg=msg, first=first, second=second,
-                missing_keys=missing_keys, extra_keys=extra_keys)
+                msg=msg,
+                first=first,
+                second=second,
+                missing_keys=missing_keys,
+                extra_keys=extra_keys,
+            )
         raise AssertionError(msg)
     for key in first:
         first_value = first[key]
         second_value = second[key]
         msg = "key '{}' differs: {!r} != {!r}".format(
-            key, first_value, second_value)
+            key, first_value, second_value
+        )
         if value_msg_fmt:
             msg = value_msg_fmt.format(
-                msg=msg, first=first, second=second,
-                key=key, first_value=first_value, second_value=second_value)
+                msg=msg,
+                first=first,
+                second=second,
+                key=key,
+                first_value=first_value,
+                second_value=second_value,
+            )
         msg = msg.replace("{", "{{").replace("}", "}}")
         assert_equal(first_value, second_value, msg_fmt=msg)
 
 
-def assert_dict_superset(first, second, key_msg_fmt="{msg}",
-                         value_msg_fmt="{msg}"):
+def assert_dict_superset(
+    first, second, key_msg_fmt="{msg}", value_msg_fmt="{msg}"
+):
     """Fail unless second dictionary is a superset of the first.
 
     The second dictionary must contain all keys of the first and their
@@ -400,17 +422,24 @@ def assert_dict_superset(first, second, key_msg_fmt="{msg}",
             msg = "keys {} missing from right dict".format(keys)
         if key_msg_fmt:
             msg = key_msg_fmt.format(
-                msg=msg, first=first, second=second, missing_keys=missing_keys)
+                msg=msg, first=first, second=second, missing_keys=missing_keys
+            )
         raise AssertionError(msg)
     for key in first:
         first_value = first[key]
         second_value = second[key]
         msg = "key '{}' differs: {!r} != {!r}".format(
-            key, first_value, second_value)
+            key, first_value, second_value
+        )
         if value_msg_fmt:
             msg = value_msg_fmt.format(
-                msg=msg, first=first, second=second,
-                key=key, first_value=first_value, second_value=second_value)
+                msg=msg,
+                first=first,
+                second=second,
+                key=key,
+                first_value=first_value,
+                second_value=second_value,
+            )
         msg = msg.replace("{", "{{").replace("}", "}}")
         assert_equal(first_value, second_value, msg_fmt=msg)
 
@@ -644,18 +673,23 @@ def assert_count_equal(sequence1, sequence2, msg_fmt="{msg}"):
         msg = ""
         if missing_from_1:
             msg += "missing from sequence 1: " + ", ".join(
-                repr(i) for i in missing_from_1)
+                repr(i) for i in missing_from_1
+            )
         if missing_from_1 and missing_from_2:
             msg += "; "
         if missing_from_2:
             msg += "missing from sequence 2: " + ", ".join(
-                repr(i) for i in missing_from_2)
+                repr(i) for i in missing_from_2
+            )
         return msg
 
     missing_from_1, missing_from_2 = compare()
     if missing_from_1 or missing_from_2:
-        fail(msg_fmt.format(
-            msg=build_message(), first=sequence1, second=sequence2))
+        fail(
+            msg_fmt.format(
+                msg=build_message(), first=sequence1, second=sequence2
+            )
+        )
 
 
 def assert_between(lower_bound, upper_bound, expr, msg_fmt="{msg}"):
@@ -677,9 +711,13 @@ def assert_between(lower_bound, upper_bound, expr, msg_fmt="{msg}"):
 
     if not lower_bound <= expr <= upper_bound:
         msg = "{!r} is not between {} and {}".format(
-            expr, lower_bound, upper_bound)
-        fail(msg_fmt.format(msg=msg, lower=lower_bound, upper=upper_bound,
-                            expr=expr))
+            expr, lower_bound, upper_bound
+        )
+        fail(
+            msg_fmt.format(
+                msg=msg, lower=lower_bound, upper=upper_bound, expr=expr
+            )
+        )
 
 
 def assert_is_instance(obj, cls, msg_fmt="{msg}"):
@@ -699,8 +737,9 @@ def assert_is_instance(obj, cls, msg_fmt="{msg}"):
     """
     if not isinstance(obj, cls):
         msg = "{!r} is an instance of {!r}, expected {!r}".format(
-            obj, obj.__class__, cls)
-        types = cls if isinstance(cls, tuple) else (cls, )
+            obj, obj.__class__, cls
+        )
+        types = cls if isinstance(cls, tuple) else (cls,)
         fail(msg_fmt.format(msg=msg, obj=obj, types=types))
 
 
@@ -859,8 +898,10 @@ class AssertRaisesContext(object):
 
     def format_message(self, default_msg):
         return self.msg_fmt.format(
-            msg=default_msg, exc_type=self._exc_type,
-            exc_name=self._exception_name)
+            msg=default_msg,
+            exc_type=self._exc_type,
+            exc_name=self._exception_name,
+        )
 
     def add_test(self, cb):
         """Add a test callback.
@@ -883,8 +924,12 @@ class AssertRaisesRegexContext(AssertRaisesContext):
 
     def format_message(self, default_msg):
         return self.msg_fmt.format(
-            msg=default_msg, exc_type=self._exc_type,
-            exc_name=self._exception_name, pattern=self.pattern, text="")
+            msg=default_msg,
+            exc_type=self._exc_type,
+            exc_name=self._exception_name,
+            pattern=self.pattern,
+            text="",
+        )
 
 
 class AssertRaisesErrnoContext(AssertRaisesContext):
@@ -897,9 +942,12 @@ class AssertRaisesErrnoContext(AssertRaisesContext):
 
     def format_message(self, default_msg):
         return self.msg_fmt.format(
-            msg=default_msg, exc_type=self._exc_type,
+            msg=default_msg,
+            exc_type=self._exc_type,
             exc_name=self._exception_name,
-            expected_errno=self.expected_errno, actual_errno=None)
+            expected_errno=self.expected_errno,
+            actual_errno=None,
+        )
 
 
 def assert_raises(exception, msg_fmt="{msg}"):
@@ -960,15 +1008,27 @@ def assert_raises_regex(exception, regex, msg_fmt="{msg}"):
         compiled = re.compile(regex)
         if not exc.args:
             msg = "{} without message".format(exception.__name__)
-            fail(msg_fmt.format(
-                msg=msg, text=None, pattern=compiled.pattern,
-                exc_type=exception, exc_name=exception.__name__))
+            fail(
+                msg_fmt.format(
+                    msg=msg,
+                    text=None,
+                    pattern=compiled.pattern,
+                    exc_type=exception,
+                    exc_name=exception.__name__,
+                )
+            )
         text = exc.args[0]
         if not compiled.search(text):
             msg = "{!r} does not match {!r}".format(text, compiled.pattern)
-            fail(msg_fmt.format(
-                msg=msg, text=text, pattern=compiled.pattern,
-                exc_type=exception, exc_name=exception.__name__))
+            fail(
+                msg_fmt.format(
+                    msg=msg,
+                    text=text,
+                    pattern=compiled.pattern,
+                    exc_type=exception,
+                    exc_name=exception.__name__,
+                )
+            )
 
     context = AssertRaisesRegexContext(exception, regex, msg_fmt)
     context.add_test(test)
@@ -1000,9 +1060,16 @@ def assert_raises_errno(exception, errno, msg_fmt="{msg}"):
     def check_errno(exc):
         if errno != exc.errno:
             msg = "wrong errno: {!r} != {!r}".format(errno, exc.errno)
-            fail(msg_fmt.format(msg=msg, exc_type=exception,
-                                exc_name=exception.__name__,
-                                expected_errno=errno, actual_errno=exc.errno))
+            fail(
+                msg_fmt.format(
+                    msg=msg,
+                    exc_type=exception,
+                    exc_name=exception.__name__,
+                    expected_errno=errno,
+                    actual_errno=exc.errno,
+                )
+            )
+
     context = AssertRaisesErrnoContext(exception, errno, msg_fmt)
     context.add_test(check_errno)
     return context
@@ -1042,16 +1109,20 @@ def assert_succeeds(exception, msg_fmt="{msg}"):
     """
 
     class _AssertSucceeds(object):
-
         def __enter__(self):
             pass
 
         def __exit__(self, exc_type, exc_val, exc_tb):
             if exc_type and issubclass(exc_type, exception):
                 msg = exception.__name__ + " was unexpectedly raised"
-                fail(msg_fmt.format(
-                    msg=msg, exc_type=exception, exc_name=exception.__name__,
-                    exception=exc_val))
+                fail(
+                    msg_fmt.format(
+                        msg=msg,
+                        exc_type=exception,
+                        exc_name=exception.__name__,
+                        exception=exc_val,
+                    )
+                )
 
     return _AssertSucceeds()
 
@@ -1104,8 +1175,10 @@ class AssertWarnsContext(object):
     def format_message(self):
         msg = "{} not issued".format(self._warning_class.__name__)
         return self._msg_fmt.format(
-            msg=msg, exc_type=self._warning_class,
-            exc_name=self._warning_class.__name__)
+            msg=msg,
+            exc_type=self._warning_class,
+            exc_name=self._warning_class.__name__,
+        )
 
     def _is_expected_warning(self, warning):
         if not issubclass(warning.category, self._warning_class):
@@ -1132,12 +1205,15 @@ class AssertWarnsRegexContext(AssertWarnsContext):
         self.pattern = pattern
 
     def format_message(self):
-        msg = "no {} matching {} issued".format(self._warning_class.__name__,
-                                                repr(self.pattern))
+        msg = "no {} matching {} issued".format(
+            self._warning_class.__name__, repr(self.pattern)
+        )
         return self._msg_fmt.format(
-            msg=msg, exc_type=self._warning_class,
+            msg=msg,
+            exc_type=self._warning_class,
             exc_name=self._warning_class.__name__,
-            pattern=self.pattern)
+            pattern=self.pattern,
+        )
 
 
 def assert_warns(warning_type, msg_fmt="{msg}"):
@@ -1255,8 +1331,11 @@ def assert_json_subset(first, second):
         parsed_second = second
 
     if not isinstance(parsed_second, (dict, list)):
-        raise AssertionError("second must decode to dict or list, not {}".
-                             format(type(parsed_second)))
+        raise AssertionError(
+            "second must decode to dict or list, not {}".format(
+                type(parsed_second)
+            )
+        )
 
     comparer = _JSONComparer(_JSONPath("$"), first, parsed_second)
     comparer.assert_()
@@ -1320,14 +1399,16 @@ class _JSONComparer:
 
     def _raise_different_values(self):
         self._raise_assertion_error(
-            "element {path} differs: {expected} != {actual}")
+            "element {path} differs: {expected} != {actual}"
+        )
 
     def _raise_different_sizes(self):
         self._raise_assertion_error(
             "JSON array {path} differs in size: "
             "{expected_len} != {actual_len}",
             expected_len=len(self._expected),
-            actual_len=len(self._actual))
+            actual_len=len(self._actual),
+        )
 
     def _raise_missing_element(self, keys):
         if len(keys) == 1:
@@ -1336,16 +1417,21 @@ class _JSONComparer:
         else:
             format_string = "elements {elements} missing from element {path}"
             sorted_keys = sorted(keys)
-            elements = (", ".join(repr(k) for k in sorted_keys[:-1]) +
-                        ", and " + repr(sorted_keys[-1]))
+            elements = (
+                ", ".join(repr(k) for k in sorted_keys[:-1])
+                + ", and "
+                + repr(sorted_keys[-1])
+            )
         self._raise_assertion_error(format_string, elements=elements)
 
     def _raise_assertion_error(self, format_, **kwargs):
-        kwargs.update({
-            "path": self._path,
-            "expected": repr(self._expected),
-            "actual": repr(self._actual),
-        })
+        kwargs.update(
+            {
+                "path": self._path,
+                "expected": repr(self._expected),
+                "actual": repr(self._actual),
+            }
+        )
         raise AssertionError(format_.format(**kwargs))
 
 
