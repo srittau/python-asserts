@@ -1,3 +1,11 @@
+News in asserts 0.10.0
+======================
+
+API-Incompatible Changes
+------------------------
+
+* Drop support for Python 3.4.
+
 News in asserts 0.9.1
 =====================
 

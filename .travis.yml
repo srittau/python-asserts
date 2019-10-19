@@ -1,4 +1,5 @@
 language: python
+dist: bionic
 install:
   - if test `python --version 2>&1 | cut -d " " -f 2 | cut -d "." -f 1`  = 3; then pip install -r requirements.txt; fi
 script:
@@ -12,9 +13,6 @@ jobs:
       python: 2.7
       dist: trusty
     - stage: test
-      python: 3.4
-      dist: trusty
-    - stage: test
       python: 3.5
       dist: trusty
     - stage: test
@@ -22,4 +20,5 @@ jobs:
       dist: trusty
     - stage: test
       python: 3.7
-      dist: xenial
+    - stage: test
+      python: 3.8
