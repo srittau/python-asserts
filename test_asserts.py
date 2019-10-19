@@ -47,6 +47,11 @@ from asserts import (
 )
 
 
+class Box:
+    def __init__(self, initial_value):
+        self.value = initial_value
+
+
 class _DummyObject(object):
     def __init__(self, value="x"):
         self.value = value
@@ -962,6 +967,29 @@ class AssertTest(TestCase):
         else:
             fail("no exception raised")
 
+    def test_assert_raises__add_test_called(self):
+        called = Box(False)
+
+        def extra_test(exc):
+            assert_is_instance(exc, KeyError)
+            called.value = True
+
+        with assert_raises(KeyError) as context:
+            context.add_test(extra_test)
+            raise KeyError()
+        assert_true(called.value, "extra_test() was not called")
+
+    def test_assert_raises__add_test_not_called(self):
+        called = Box(False)
+
+        def extra_test(_):
+            called.value = True
+
+        with assert_raises(AssertionError):
+            with assert_raises(KeyError) as context:
+                context.add_test(extra_test)
+        assert_false(called.value, "extra_test() was unexpectedly called")
+
     # assert_raises_regex()
 
     def test_assert_raises_regex__raises_right_exception(self):
@@ -1165,6 +1193,30 @@ class AssertTest(TestCase):
             assert_equal(0, len(warnings))
             warn("bar", UserWarning)
             assert_equal(1, len(warnings))
+
+    def test_assert_warns__add_test_called(self):
+        called = Box(False)
+
+        def extra_test(warning):
+            assert_is(warning.category, UserWarning)
+            called.value = True
+            return True
+
+        with assert_warns(UserWarning) as context:
+            context.add_test(extra_test)
+            warn("bar", UserWarning)
+        assert_true(called.value, "extra_test() was not called")
+
+    def test_assert_warns__add_test_not_called(self):
+        called = Box(False)
+
+        def extra_test(_):
+            called.value = True
+
+        with assert_raises(AssertionError):
+            with assert_warns(UserWarning) as context:
+                context.add_test(extra_test)
+        assert_false(called.value, "extra_test() was unexpectedly called")
 
     # assert_warns_regex()
 

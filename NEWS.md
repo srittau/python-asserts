@@ -6,6 +6,19 @@ API-Incompatible Changes
 
 * Drop support for Python 3.4.
 
+API Additions
+-------------
+
+* `AssertRaisesContext` and `AssertWarnsContext` now return themselves
+  when `__enter__()` is called. By extension it now easier to call
+  `add_test()` with `assert_raises()` et al:
+
+```python
+with assert_raises(KeyError) as context:
+    context.add_test(...)
+    ...
+```  
+
 News in asserts 0.9.1
 =====================
 

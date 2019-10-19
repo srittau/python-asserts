@@ -884,7 +884,7 @@ class AssertRaisesContext(object):
         self._tests = []
 
     def __enter__(self):
-        pass
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if not exc_type:
@@ -1166,6 +1166,7 @@ class AssertWarnsContext(object):
     def __enter__(self):
         self._warning_context = catch_warnings(record=True)
         self._warnings = self._warning_context.__enter__()
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._warning_context.__exit__(exc_type, exc_val, exc_tb)
