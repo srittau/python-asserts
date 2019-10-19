@@ -880,6 +880,7 @@ class AssertRaisesContext(object):
         self.exception = exception
         self.msg_fmt = msg_fmt
         self._exc_type = exception
+        self._exc_val = None
         self._exception_name = getattr(exception, "__name__", str(exception))
         self._tests = []
 
@@ -887,9 +888,10 @@ class AssertRaisesContext(object):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if not exc_type:
+        if not exc_type or not exc_val:
             msg = "{} not raised".format(self._exception_name)
             fail(self.format_message(msg))
+        self._exc_val = exc_val
         if not issubclass(exc_type, self.exception):
             return False
         for test in self._tests:
@@ -912,6 +914,12 @@ class AssertRaisesContext(object):
 
         """
         self._tests.append(cb)
+
+    @property
+    def exc_val(self):
+        if self._exc_val is None:
+            raise RuntimeError("must be called after leaving the context")
+        return self._exc_val
 
 
 class AssertRaisesRegexContext(AssertRaisesContext):

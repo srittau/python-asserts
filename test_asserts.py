@@ -936,6 +936,17 @@ class AssertTest(TestCase):
         with assert_raises(KeyError):
             raise KeyError()
 
+    def test_assert_raises__exc_val(self):
+        exc = KeyError()
+        with assert_raises(KeyError) as context:
+            raise exc
+        assert_is(exc, context.exc_val)
+
+    def test_assert_raises__exc_val_within_context(self):
+        with assert_raises(RuntimeError):
+            with assert_raises(KeyError) as context:
+                context.exc_val
+
     def test_assert_raises__raises_subclass(self):
         class MyError(IndexError):
             pass

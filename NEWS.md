@@ -19,6 +19,15 @@ with assert_raises(KeyError) as context:
     ...
 ```  
 
+* Add `AssertRaisesContext.exc_val` property to access the caught
+  exception after leaving the context manager:
+
+```python
+with assert_raises(KeyError) as context:
+    ...
+assert_equal("expected message", str(context.exc_val))
+```  
+
 News in asserts 0.9.1
 =====================
 
