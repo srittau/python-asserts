@@ -1,8 +1,9 @@
 *.egg-info
 *.pyc
 
-build
-dist
+/.venv*
+/build
+/dist
 
 .mypy_cache
 
