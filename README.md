@@ -2,6 +2,7 @@ Python Asserts
 ==============
 
 [![License](https://img.shields.io/pypi/l/asserts.svg)](https://pypi.python.org/pypi/asserts/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/asserts)](https://pypi.python.org/pypi/asserts/)
 [![GitHub](https://img.shields.io/github/release/srittau/python-asserts/all.svg)](https://github.com/srittau/python-asserts/releases/)
 [![pypi](https://img.shields.io/pypi/v/asserts.svg)](https://pypi.python.org/pypi/asserts/)
 [![Travis CI](https://travis-ci.org/srittau/python-asserts.svg?branch=master)](https://travis-ci.org/srittau/python-asserts)
