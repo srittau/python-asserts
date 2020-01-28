@@ -5,4 +5,4 @@ mypy==0.761
 pycodestyle==2.5.0
 pyflakes==2.1.1
 typed-ast==1.4.1
-wheel==0.33.6
+wheel==0.34.1
