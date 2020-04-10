@@ -3,6 +3,6 @@ flake8==3.7.9
 mccabe==0.6.1
 mypy==0.770
 pycodestyle==2.5.0
-pyflakes==2.1.1
+pyflakes==2.2.0
 typed-ast==1.4.1
 wheel==0.34.2
