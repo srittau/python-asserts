@@ -5,5 +5,5 @@ mypy==0.782
 pycodestyle==2.6.0
 pyflakes==2.2.0
 typed-ast==1.4.1
-typing-extensions==3.7.4.2
+typing-extensions==3.7.4.3
 wheel==0.35.1
