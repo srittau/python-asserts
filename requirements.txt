@@ -1,5 +1,5 @@
 entrypoints==0.3
-flake8==3.8.3
+flake8==3.8.4
 mccabe==0.6.1
 mypy==0.782
 pycodestyle==2.6.0
