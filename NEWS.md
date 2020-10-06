@@ -1,3 +1,9 @@
+## News in asserts 0.11.0
+
+### API-Incompatible Changes
+
+* Drop support for Python 2.7 and 3.5.
+
 ## News in asserts 0.10.0
 
 ### API-Incompatible Changes

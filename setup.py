@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name="asserts",
-    version="0.10.0",
+    version="0.11.0",
     description="Stand-alone Assertions",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
@@ -19,16 +19,13 @@ setup(
     url="https://github.com/srittau/python-asserts",
     packages=["asserts"],
     package_data={"asserts": ["py.typed", "*.pyi"]},
-    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+    python_requires=">=3.6",
     license="MIT",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
