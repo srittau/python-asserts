@@ -1436,7 +1436,7 @@ class AssertTest(TestCase):
 
     def test_assert_json_subset__element_name_not_str(self) -> None:
         with assert_raises_regex(
-            TypeError, f"12 is not a valid object member name",
+            TypeError, "12 is not a valid object member name",
         ):
             assert_json_subset({12: 34}, "{}")
 
