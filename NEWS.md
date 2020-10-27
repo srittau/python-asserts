@@ -1,3 +1,12 @@
+## News in asserts 0.11.1
+
+### API Additions
+
+* `assert_json_subset()` can now check for the existence or non-existence
+  of object members using the new `Exists` helper.
+* Non-string (or `Exists`) object member names in the first argument to
+  `assert_json_subset()` now raise a `TypeError`.
+
 ## News in asserts 0.11.0
 
 ### API-Incompatible Changes

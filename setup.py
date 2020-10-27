@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name="asserts",
-    version="0.11.0",
+    version="0.11.1",
     description="Stand-alone Assertions",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",

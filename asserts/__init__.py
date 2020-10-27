@@ -24,6 +24,7 @@ import re
 import sys
 from datetime import datetime, timedelta
 from json import loads as json_loads
+from typing import Set
 from warnings import catch_warnings
 
 
@@ -1305,7 +1306,7 @@ def assert_json_subset(first, second):
 
     A JSON object is the subset of another JSON object if for each name/value
     pair in the former there is a name/value pair in the latter with the same
-    name. Additionally the value of the former pair must be a subset of the
+    name. Additionally, the value of the former pair must be a subset of the
     value of the latter pair.
 
     A JSON array is the subset of another JSON array, if they have the same
@@ -1328,6 +1329,20 @@ def assert_json_subset(first, second):
     Traceback (most recent call last):
     ...
     json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+    In objects, the special name `Exists` can be used to check for the
+    existence or non-existence of a specific key:
+
+    >>> assert_json_subset({Exists("foo"): True}, '{"foo": "bar"}')
+    >>> assert_json_subset({Exists("foo"): True}, '{}')
+    Traceback (most recent call last):
+    ...
+    AssertionError: element 'foo' missing from element $
+    >>> assert_json_subset({Exists("foo"): False}, '{}')
+    >>> assert_json_subset({Exists("foo"): False}, '{"foo": "bar"}')
+    Traceback (most recent call last):
+    ...
+    AssertionError: spurious member 'foo' in object $
     """
 
     if not isinstance(second, (dict, list, str, bytes)):
@@ -1380,15 +1395,44 @@ class _JSONComparer:
         else:
             raise TypeError("unsupported type {}".format(type(self._expected)))
 
-    def _assert_dicts_equal(self):
-        self._assert_all_expected_keys_in_actual_dict()
+    def _assert_dicts_equal(self) -> None:
         for name in self._expected:
-            self._assert_json_value_equals_with_item(name)
+            if not isinstance(name, (str, Exists)):
+                raise TypeError(
+                    f"{repr(name)} is not a valid object member name",
+                )
+        self._assert_all_expected_keys_in_actual_dict()
+        self._assert_no_wrong_keys()
+        self._assert_dict_values_equal()
 
-    def _assert_all_expected_keys_in_actual_dict(self):
-        keys = set(self._expected.keys()).difference(self._actual.keys())
+    def _assert_all_expected_keys_in_actual_dict(self) -> None:
+        keys = self._expected_key_names.difference(self._actual.keys())
         if keys:
             self._raise_missing_element(keys)
+
+    def _assert_no_wrong_keys(self) -> None:
+        for name in self._expected:
+            if isinstance(name, Exists) and not self._expected[name]:
+                if name.member_name in self._actual:
+                    self._raise_assertion_error(
+                        f"spurious member '{name.member_name}' in "
+                        f"object {{path}}"
+                    )
+
+    def _assert_dict_values_equal(self) -> None:
+        for name in self._expected:
+            if isinstance(name, str):
+                self._assert_json_value_equals_with_item(name)
+
+    @property
+    def _expected_key_names(self) -> Set[str]:
+        keys: Set[str] = set()
+        for k in self._expected.keys():
+            if isinstance(k, str):
+                keys.add(k)
+            elif isinstance(k, Exists) and self._expected[k]:
+                keys.add(k.member_name)
+        return keys
 
     def _assert_arrays_equal(self):
         if len(self._expected) != len(self._actual):
@@ -1453,3 +1497,9 @@ class _JSONPath:
 
     def append(self, item):
         return _JSONPath("{0}[{1}]".format(self._path, repr(item)))
+
+
+class Exists:
+    """Helper class for existence checks in assert_json_subset()."""
+    def __init__(self, member_name: str) -> None:
+        self.member_name = member_name

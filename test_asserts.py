@@ -43,7 +43,7 @@ from asserts import (
     assert_succeeds,
     assert_warns,
     assert_warns_regex,
-    assert_json_subset,
+    assert_json_subset, Exists,
 )
 
 
@@ -1433,3 +1433,23 @@ class AssertTest(TestCase):
             TypeError, "second must be dict, list, str, or bytes"
         ):
             assert_json_subset({}, 42)  # type: ignore
+
+    def test_assert_json_subset__element_name_not_str(self) -> None:
+        with assert_raises_regex(
+            TypeError, f"12 is not a valid object member name",
+        ):
+            assert_json_subset({12: 34}, "{}")
+
+    def test_assert_json_subset__existence_check(self) -> None:
+        with assert_succeeds(AssertionError):
+            assert_json_subset({Exists("foo"): True}, {"foo": "bar"})
+        with assert_raises_regex(
+            AssertionError, r"element 'foo' missing from element \$",
+        ):
+            assert_json_subset({Exists("foo"): True}, {})
+        with assert_succeeds(AssertionError):
+            assert_json_subset({Exists("foo"): False}, {})
+        with assert_raises_regex(
+            AssertionError, r"spurious member 'foo' in object \$",
+        ):
+            assert_json_subset({Exists("foo"): False}, {"foo": "bar"})
