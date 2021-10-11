@@ -1,9 +1,12 @@
-entrypoints==0.3
-flake8==3.9.2
-mccabe==0.6.1
+# Direct dependencies
+flake8==4.0.0
 mypy==0.910
-pycodestyle==2.7.0
-pyflakes==2.3.1
-typed-ast==1.4.3
-typing-extensions==3.10.0.2
 wheel==0.37.0
+
+# Indirect dependencies
+mccabe==0.6.1
+mypy-extensions==0.4.3
+pycodestyle==2.8.0
+pyflakes==2.4.0
+toml==0.10.2
+typing-extensions==3.10.0.2
