@@ -1,5 +1,5 @@
 # Direct dependencies
-flake8==4.0.0
+flake8==4.0.1
 mypy==0.910
 wheel==0.37.0
 
