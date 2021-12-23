@@ -1,6 +1,6 @@
 # Direct dependencies
 flake8==4.0.1
-mypy==0.921
+mypy==0.930
 wheel==0.37.0
 
 # Indirect dependencies
