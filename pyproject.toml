@@ -1,2 +1,31 @@
+[tool.poetry]
+name = "asserts"
+version = "0.11.1"
+description = "Stand-alone Assertions"
+readme = "README.md"
+authors = ["Sebastian Rittau <srittau@rittau.biz>"]
+license = "MIT"
+homepage = "https://github.com/srittau/python-asserts"
+repository = "https://github.com/srittau/python-asserts"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+]
+packages = [{ include = "asserts" }]
+include = ["*/py.typed", "*.pyi"]
+
+[tool.poetry.dependencies]
+python = ">=3.6"
+
+[tool.poetry.dev-dependencies]
+flake8 = "~4.0.1"
+mypy = "0.931"
+
 [tool.black]
 line-length = 79
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
