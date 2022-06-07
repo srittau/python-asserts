@@ -21,7 +21,7 @@ python = ">=3.6"
 
 [tool.poetry.dev-dependencies]
 flake8 = "~4.0.1"
-mypy = "0.960"
+mypy = "0.961"
 
 [tool.black]
 line-length = 79
