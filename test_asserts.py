@@ -5,46 +5,47 @@ import sys
 from collections import OrderedDict
 from datetime import datetime, timedelta
 from unittest import TestCase
-from warnings import warn, catch_warnings
+from warnings import catch_warnings, warn
 
 from asserts import (
-    fail,
-    assert_true,
-    assert_false,
-    assert_boolean_true,
-    assert_boolean_false,
-    assert_is_none,
-    assert_is_not_none,
-    assert_equal,
-    assert_not_equal,
+    Exists,
     assert_almost_equal,
-    assert_not_almost_equal,
-    assert_dict_equal,
-    assert_dict_superset,
-    assert_less,
-    assert_less_equal,
-    assert_greater,
-    assert_greater_equal,
     assert_between,
-    assert_is,
-    assert_is_not,
-    assert_in,
-    assert_not_in,
+    assert_boolean_false,
+    assert_boolean_true,
     assert_count_equal,
-    assert_regex,
-    assert_is_instance,
-    assert_not_is_instance,
-    assert_has_attr,
     assert_datetime_about_now,
     assert_datetime_about_now_utc,
+    assert_dict_equal,
+    assert_dict_superset,
+    assert_equal,
+    assert_false,
+    assert_greater,
+    assert_greater_equal,
+    assert_has_attr,
+    assert_in,
+    assert_is,
+    assert_is_instance,
+    assert_is_none,
+    assert_is_not,
+    assert_is_not_none,
+    assert_json_subset,
+    assert_less,
+    assert_less_equal,
+    assert_not_almost_equal,
+    assert_not_equal,
+    assert_not_in,
+    assert_not_is_instance,
+    assert_not_regex,
     assert_raises,
-    assert_raises_regex,
     assert_raises_errno,
+    assert_raises_regex,
+    assert_regex,
     assert_succeeds,
+    assert_true,
     assert_warns,
     assert_warns_regex,
-    assert_json_subset,
-    Exists,
+    fail,
 )
 
 
@@ -616,6 +617,49 @@ class AssertTest(TestCase):
             "'not found'"
         ):
             assert_regex("Wrong text", regex, "{msg};{text!r};{pattern!r}")
+
+    # assert_not_regex()
+
+    def test_assert_not_regex__does_not_match_string(self):
+        assert_not_regex("This is a test text", "no match")
+
+    def test_assert_not_regex__does_not_match_regex(self):
+        regex = re.compile("no match")
+        assert_not_regex("This is a test text", regex)
+
+    def test_assert_not_regex__matches_string__default_message(self):
+        with _assert_raises_assertion(
+            "'This is a test text' matches 'is.*test'"
+        ):
+            assert_not_regex("This is a test text", "is.*test")
+
+    def test_assert_not_regex__matches_regex__default_message(self):
+        regex = re.compile("is.*test")
+        with _assert_raises_assertion(
+            "'This is a test text' matches 'is.*test'"
+        ):
+            assert_not_regex("This is a test text", regex)
+
+    def test_assert_not_regex__matches_string__custom_message(self):
+        with _assert_raises_assertion(
+            "'This is a test text' matches 'is.*test';"
+            "'This is a test text';'is.*test'"
+        ):
+            assert_not_regex(
+                "This is a test text",
+                "is.*test",
+                "{msg};{text!r};{pattern!r}",
+            )
+
+    def test_assert_not_regex__matches_regex__custom_message(self):
+        regex = re.compile("is.*test")
+        with _assert_raises_assertion(
+            "'This is a test text' matches 'is.*test';'This is a test text';"
+            "'is.*test'"
+        ):
+            assert_not_regex(
+                "This is a test text", regex, "{msg};{text!r};{pattern!r}"
+            )
 
     # assert_is()
 

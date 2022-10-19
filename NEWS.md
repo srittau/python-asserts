@@ -4,6 +4,10 @@
 
 - Drop support for Python 3.6.
 
+### API Additions
+
+- Add `assert_not_regex()`.
+
 ### Other Changes
 
 - Modernize the type stubs.

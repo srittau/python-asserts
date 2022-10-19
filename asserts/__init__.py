@@ -551,6 +551,30 @@ def assert_regex(text, regex, msg_fmt="{msg}"):
         fail(msg_fmt.format(msg=msg, text=text, pattern=compiled.pattern))
 
 
+def assert_not_regex(text, regex, msg_fmt="{msg}"):
+    """Fail if text does match the regular expression.
+
+    regex can be either a regular expression string or a compiled regular
+    expression object.
+
+    >>> assert_regex("Hello World!", r"llo.*rld!$")
+    >>> assert_regex("Hello World!", r"\\d")
+    Traceback (most recent call last):
+        ...
+    AssertionError: 'Hello World!' does not match '\\\\d'
+
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * text - text that is matched
+    * pattern - regular expression pattern as string
+    """
+
+    compiled = re.compile(regex)
+    if compiled.search(text):
+        msg = "{!r} matches {!r}".format(text, compiled.pattern)
+        fail(msg_fmt.format(msg=msg, text=text, pattern=compiled.pattern))
+
+
 def assert_is(first, second, msg_fmt="{msg}"):
     """Fail if first and second do not refer to the same object.
 
