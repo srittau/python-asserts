@@ -4,34 +4,33 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11-dev"]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11-dev"]
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: "pip"
-        cache-dependency-path: "**/poetry.lock"
-    - name: Install poetry
-      run: pip --disable-pip-version-check install -U poetry
-    - name: Install Python packages
-      run: poetry install
-    - name: Lint with flake8
-      run: |
-        poetry run flake8 --version
-        poetry run flake8 --show-source --statistics asserts test_asserts.py
-    - name: Type checking with mypy
-      run: |
-        poetry run mypy --version
-        poetry run mypy asserts test_asserts.py
-    - name: Test with unittest
-      run: poetry run python -Wall -m unittest test_asserts
-    - name: Run doctests
-      run: poetry run python -m doctest asserts/__init__.py
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+          cache-dependency-path: "**/poetry.lock"
+      - name: Install poetry
+        run: pip --disable-pip-version-check install -U poetry
+      - name: Install Python packages
+        run: poetry install
+      - name: Lint with flake8
+        run: |
+          poetry run flake8 --version
+          poetry run flake8 --show-source --statistics asserts test_asserts.py
+      - name: Type checking with mypy
+        run: |
+          poetry run mypy --version
+          poetry run mypy asserts test_asserts.py
+      - name: Test with unittest
+        run: poetry run python -Wall -m unittest test_asserts
+      - name: Run doctests
+        run: poetry run python -m doctest asserts/__init__.py
