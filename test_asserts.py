@@ -43,7 +43,8 @@ from asserts import (
     assert_succeeds,
     assert_warns,
     assert_warns_regex,
-    assert_json_subset, Exists,
+    assert_json_subset,
+    Exists,
 )
 
 
@@ -732,8 +733,10 @@ class AssertTest(TestCase):
     # assert_is_instance()
 
     def _is_instance_message(self, expr, expected_type, real_type):
-        expected_message = "{!r} is an instance of <class {}>, expected {}".format(
-            expr, real_type, expected_type
+        expected_message = (
+            "{!r} is an instance of <class {}>, expected {}".format(
+                expr, real_type, expected_type
+            )
         )
         if sys.version_info[0] < 3:
             return expected_message.replace("class", "type")
@@ -1345,7 +1348,7 @@ class AssertTest(TestCase):
             assert_json_subset({"foo": 3, "bar": 3}, {"foo": 3})
 
     def test_assert_json_subset__multiple_keys_missing_from_second_object(
-        self
+        self,
     ):
         with _assert_raises_assertion(
             "elements 'bar', 'baz', and 'foo' missing from element $"
@@ -1422,11 +1425,11 @@ class AssertTest(TestCase):
 
     def test_assert_json_subset__second_is_bytes(self):
         with assert_succeeds(AssertionError):
-            assert_json_subset([u"föo"], u'["föo"]'.encode("utf-8"))
+            assert_json_subset(["föo"], '["föo"]'.encode("utf-8"))
 
     def test_assert_json_subset__second_is_latin1_bytes(self):
         with assert_raises(UnicodeDecodeError):
-            assert_json_subset([u"föo"], u'["föo"]'.encode("iso-8859-1"))
+            assert_json_subset(["föo"], '["föo"]'.encode("iso-8859-1"))
 
     def test_assert_json_subset__invalid_type(self):
         with assert_raises_regex(
@@ -1436,7 +1439,8 @@ class AssertTest(TestCase):
 
     def test_assert_json_subset__element_name_not_str(self) -> None:
         with assert_raises_regex(
-            TypeError, "12 is not a valid object member name",
+            TypeError,
+            "12 is not a valid object member name",
         ):
             assert_json_subset({12: 34}, "{}")
 
@@ -1444,12 +1448,14 @@ class AssertTest(TestCase):
         with assert_succeeds(AssertionError):
             assert_json_subset({Exists("foo"): True}, {"foo": "bar"})
         with assert_raises_regex(
-            AssertionError, r"element 'foo' missing from element \$",
+            AssertionError,
+            r"element 'foo' missing from element \$",
         ):
             assert_json_subset({Exists("foo"): True}, {})
         with assert_succeeds(AssertionError):
             assert_json_subset({Exists("foo"): False}, {})
         with assert_raises_regex(
-            AssertionError, r"spurious member 'foo' in object \$",
+            AssertionError,
+            r"spurious member 'foo' in object \$",
         ):
             assert_json_subset({Exists("foo"): False}, {"foo": "bar"})

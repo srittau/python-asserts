@@ -1501,5 +1501,6 @@ class _JSONPath:
 
 class Exists:
     """Helper class for existence checks in assert_json_subset()."""
+
     def __init__(self, member_name: str) -> None:
         self.member_name = member_name
