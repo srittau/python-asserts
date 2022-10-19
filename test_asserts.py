@@ -4,6 +4,7 @@ import re
 import sys
 from collections import OrderedDict
 from datetime import datetime, timedelta
+from json import JSONDecodeError
 from unittest import TestCase
 from warnings import catch_warnings, warn
 
@@ -277,7 +278,7 @@ class AssertTest(TestCase):
 
     def test_assert_almost_equal__wrong_types(self):
         try:
-            assert_almost_equal("5", "5")  # type: ignore
+            assert_almost_equal("5", "5")  # type: ignore[arg-type]
         except TypeError:
             pass
         else:
@@ -370,7 +371,7 @@ class AssertTest(TestCase):
 
     def test_assert_not_almost_equal__wrong_types(self):
         try:
-            assert_not_almost_equal("5", "5")  # type: ignore
+            assert_not_almost_equal("5", "5")  # type: ignore[arg-type]
         except TypeError:
             pass
         else:
@@ -1460,10 +1461,6 @@ class AssertTest(TestCase):
             assert_json_subset({}, "42")
 
     def test_assert_json_subset__second_is_invalid_json_string(self):
-        try:
-            from json import JSONDecodeError
-        except ImportError:
-            JSONDecodeError = ValueError  # type: ignore
         with assert_raises(JSONDecodeError):
             assert_json_subset({}, ",")
 
@@ -1479,7 +1476,7 @@ class AssertTest(TestCase):
         with assert_raises_regex(
             TypeError, "second must be dict, list, str, or bytes"
         ):
-            assert_json_subset({}, 42)  # type: ignore
+            assert_json_subset({}, 42)  # type: ignore[arg-type]
 
     def test_assert_json_subset__element_name_not_str(self) -> None:
         with assert_raises_regex(
