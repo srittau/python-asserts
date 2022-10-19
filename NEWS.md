@@ -4,6 +4,10 @@
 
 - Drop support for Python 3.6.
 
+### Other Changes
+
+- Modernize the type stubs.
+
 ## News in asserts 0.11.1
 
 ### API Additions
