@@ -23,6 +23,7 @@ jobs:
       - name: Install Python packages
         run: poetry install
       - name: Lint with flake8
+        if: matrix.python-version >= "3.8"
         run: |
           poetry run flake8 --version
           poetry run flake8 --show-source --statistics asserts test_asserts.py
