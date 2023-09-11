@@ -1,3 +1,9 @@
+## Unreleased
+
+### Incompatible Changes
+
+- Drop support for Python 3.7.
+
 ## News in asserts 0.12.0
 
 ### Incompatible Changes

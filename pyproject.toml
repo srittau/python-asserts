@@ -22,12 +22,12 @@ include = ["*/py.typed", "*.pyi"]
 "Changes" = "https://github.com/srittau/python-asserts/blob/main/CHANGELOG.md"
 
 [tool.poetry.dependencies]
-python = ">=3.7"
+python = ">=3.8"
 
 [tool.poetry.group.dev.dependencies]
 black = { version = "^23.1.0", python = ">=3.8" }
 flake8 = { version = "^6.0.0", python = ">=3.8.1" }
-mypy = ">=1.2,<1.5"
+mypy = "~1.5.1"
 
 [tool.black]
 line-length = 79
