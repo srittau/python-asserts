@@ -1269,8 +1269,9 @@ class AssertTest(TestCase):
     def test_assert_warns__add_test_not_called(self):
         called = Box(False)
 
-        def extra_test(_):
+        def extra_test(_: Warning) -> bool:
             called.value = True
+            return False
 
         with assert_raises(AssertionError):
             with assert_warns(UserWarning) as context:
@@ -1342,10 +1343,7 @@ class AssertTest(TestCase):
                 pass
 
     def test_assert_warns_regex__not_issued__custom_message(self):
-        expected = (
-            "no ImportWarning matching 'abc' issued;ImportWarning;"
-            "ImportWarning;abc"
-        )
+        expected = "no ImportWarning matching 'abc' issued;ImportWarning;ImportWarning;abc"
         with _assert_raises_assertion(expected):
             msg_fmt = "{msg};{exc_type.__name__};{exc_name};{pattern}"
             with assert_warns_regex(ImportWarning, r"abc", msg_fmt=msg_fmt):
