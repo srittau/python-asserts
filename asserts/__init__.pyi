@@ -5,6 +5,8 @@ from re import Pattern
 from types import TracebackType
 from typing import Any, Generic, NoReturn, TypeVar
 
+from typing_extensions import deprecated
+
 _E = TypeVar("_E", bound=BaseException)
 _S = TypeVar("_S")
 
@@ -163,6 +165,10 @@ def assert_json_subset(
     second: dict[str, Any] | list[Any] | str | bytes,
 ) -> None: ...
 
+class Present: ...
+class Absent: ...
+
+@deprecated("Use Present and Absent instead.")
 class Exists:
     member_name: str
     def __init__(self, member_name: str) -> None: ...

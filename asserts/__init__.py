@@ -29,6 +29,8 @@ from json import loads as json_loads
 from typing import Any, Callable, Set
 from warnings import WarningMessage, catch_warnings
 
+from typing_extensions import deprecated
+
 
 def fail(msg=None):
     """Raise an AssertionError with the given message.
@@ -1354,8 +1356,8 @@ def assert_json_subset(first, second):
     ...
     json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
-    In objects, the special name `Exists` can be used to check for the
-    existence or non-existence of a specific key:
+    In objects, the special classes `Present` and `Absent` can be used to
+    check for the presence or absence of a specific key:
 
     >>> assert_json_subset({Exists("foo"): True}, '{"foo": "bar"}')
     >>> assert_json_subset({Exists("foo"): True}, '{}')
@@ -1401,6 +1403,8 @@ class _JSONComparer:
             self._assert_dicts_equal()
         elif isinstance(self._expected, list):
             self._assert_arrays_equal()
+        elif _is_present(self._expected):
+            pass
         else:
             self._assert_fundamental_values_equal()
 
@@ -1413,6 +1417,8 @@ class _JSONComparer:
             return self._actual is not None
         elif isinstance(self._expected, (int, float)):
             return not isinstance(self._actual, (int, float))
+        elif _is_present(self._expected):
+            return False
         for type_ in [bool, str, _Str, list, dict]:
             if isinstance(self._expected, type_):
                 return not isinstance(self._actual, type_)
@@ -1436,16 +1442,20 @@ class _JSONComparer:
 
     def _assert_no_wrong_keys(self) -> None:
         for name in self._expected:
+            if isinstance(name, str) and _is_absent(self._expected[name]):
+                if name in self._actual:
+                    self._raise_assertion_error(
+                        f"spurious member '{name}' in object {{path}}"
+                    )
             if isinstance(name, Exists) and not self._expected[name]:
                 if name.member_name in self._actual:
                     self._raise_assertion_error(
-                        f"spurious member '{name.member_name}' in "
-                        f"object {{path}}"
+                        f"spurious member '{name.member_name}' in object {{path}}"
                     )
 
     def _assert_dict_values_equal(self) -> None:
         for name in self._expected:
-            if isinstance(name, str):
+            if isinstance(name, str) and not _is_absent(self._expected[name]):
                 self._assert_json_value_equals_with_item(name)
 
     @property
@@ -1453,7 +1463,8 @@ class _JSONComparer:
         keys: Set[str] = set()
         for k in self._expected.keys():
             if isinstance(k, str):
-                keys.add(k)
+                if not _is_absent(self._expected[k]):
+                    keys.add(k)
             elif isinstance(k, Exists) and self._expected[k]:
                 keys.add(k.member_name)
         return keys
@@ -1523,6 +1534,23 @@ class _JSONPath:
         return _JSONPath("{0}[{1}]".format(self._path, repr(item)))
 
 
+class Present:
+    """Helper class for presence checks in assert_json_subset()."""
+
+
+def _is_present(o: object) -> bool:
+    return o is Present or isinstance(o, Present)
+
+
+class Absent:
+    """Helper class for absence checks in assert_json_subset()."""
+
+
+def _is_absent(o: object) -> bool:
+    return o is Absent or isinstance(o, Absent)
+
+
+@deprecated("Use Present and Absent instead.")
 class Exists:
     """Helper class for existence checks in assert_json_subset()."""
 

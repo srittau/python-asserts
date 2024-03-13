@@ -6,10 +6,12 @@ from collections import OrderedDict
 from datetime import datetime, timedelta
 from json import JSONDecodeError
 from unittest import TestCase
-from warnings import catch_warnings, warn
+from warnings import catch_warnings, simplefilter, warn
 
 from asserts import (
+    Absent,
     Exists,
+    Present,
     assert_almost_equal,
     assert_between,
     assert_boolean_false,
@@ -1483,18 +1485,50 @@ class AssertTest(TestCase):
         ):
             assert_json_subset({12: 34}, "{}")
 
-    def test_assert_json_subset__existence_check(self) -> None:
+    def test_assert_json_subset__presence_check(self) -> None:
         with assert_succeeds(AssertionError):
-            assert_json_subset({Exists("foo"): True}, {"foo": "bar"})
+            assert_json_subset({"foo": Present}, {"foo": "bar"})
+        with assert_succeeds(AssertionError):
+            assert_json_subset({"foo": Present()}, {"foo": "bar"})
         with assert_raises_regex(
             AssertionError,
             r"element 'foo' missing from element \$",
         ):
-            assert_json_subset({Exists("foo"): True}, {})
+            assert_json_subset({"foo": Present}, {})
+        with assert_raises_regex(
+            AssertionError,
+            r"element 'foo' missing from element \$",
+        ):
+            assert_json_subset({"foo": Present()}, {})
         with assert_succeeds(AssertionError):
-            assert_json_subset({Exists("foo"): False}, {})
+            assert_json_subset({"foo": Absent}, {})
+        with assert_succeeds(AssertionError):
+            assert_json_subset({"foo": Absent()}, {})
         with assert_raises_regex(
             AssertionError,
             r"spurious member 'foo' in object \$",
         ):
-            assert_json_subset({Exists("foo"): False}, {"foo": "bar"})
+            assert_json_subset({"foo": Absent}, {"foo": "bar"})
+        with assert_raises_regex(
+            AssertionError,
+            r"spurious member 'foo' in object \$",
+        ):
+            assert_json_subset({"foo": Absent()}, {"foo": "bar"})
+
+    def test_assert_json_subset__existence_check_old(self) -> None:
+        with catch_warnings(category=DeprecationWarning):
+            simplefilter("ignore")
+            with assert_succeeds(AssertionError):
+                assert_json_subset({Exists("foo"): True}, {"foo": "bar"})
+            with assert_raises_regex(
+                AssertionError,
+                r"element 'foo' missing from element \$",
+            ):
+                assert_json_subset({Exists("foo"): True}, {})
+            with assert_succeeds(AssertionError):
+                assert_json_subset({Exists("foo"): False}, {})
+            with assert_raises_regex(
+                AssertionError,
+                r"spurious member 'foo' in object \$",
+            ):
+                assert_json_subset({Exists("foo"): False}, {"foo": "bar"})

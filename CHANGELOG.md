@@ -7,10 +7,16 @@ python-asserts adheres to [semantic versioning](https://semver.org/).
 ### Added
 
 - Add support for Python 3.12.
+- Add `Present` and `Absent` for absence checks in `assert_json_subset()`.
 
 ### Removed
 
 - Drop support for Python 3.7.
+
+### Deprecated
+
+- Deprecate `Exists` in favor of `Present` and `Absent` in
+  `assert_json_subset()`.
 
 ## [0.12.0]
 
