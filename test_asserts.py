@@ -1516,7 +1516,7 @@ class AssertTest(TestCase):
             assert_json_subset({"foo": Absent()}, {"foo": "bar"})
 
     def test_assert_json_subset__existence_check_old(self) -> None:
-        with catch_warnings(category=DeprecationWarning):
+        with catch_warnings():
             simplefilter("ignore")
             with assert_succeeds(AssertionError):
                 assert_json_subset({Exists("foo"): True}, {"foo": "bar"})
