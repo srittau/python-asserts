@@ -27,7 +27,7 @@ python = ">=3.8.1"
 [tool.poetry.group.dev.dependencies]
 black = { version = "^24.2.0" }
 flake8 = { version = "^7.0.0" }
-mypy = "~1.5.1"
+mypy = "~1.9.0"
 poethepoet = "^0.25.0"
 
 [tool.black]
