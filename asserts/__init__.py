@@ -865,7 +865,6 @@ def assert_datetime_about_now_utc(actual, msg_fmt="{msg}"):
 
 
 class AssertRaisesContext(object):
-
     """A context manager to test for exceptions with certain properties.
 
     When the context is left and no exception has been raised, an
@@ -948,7 +947,6 @@ class AssertRaisesContext(object):
 
 
 class AssertRaisesRegexContext(AssertRaisesContext):
-
     """A context manager to test for exceptions and their messages."""
 
     def __init__(self, exception, pattern, msg_fmt="{msg}"):
@@ -966,7 +964,6 @@ class AssertRaisesRegexContext(AssertRaisesContext):
 
 
 class AssertRaisesErrnoContext(AssertRaisesContext):
-
     """A context manager to test for exceptions with errnos."""
 
     def __init__(self, exception, expected_errno, msg_fmt="{msg}"):
@@ -1161,7 +1158,6 @@ def assert_succeeds(exception, msg_fmt="{msg}"):
 
 
 class AssertWarnsContext(object):
-
     """A context manager to test for warnings with certain properties.
 
     When the context is left and the expected warning has not been raised, an
@@ -1231,7 +1227,6 @@ class AssertWarnsContext(object):
 
 
 class AssertWarnsRegexContext(AssertWarnsContext):
-
     """A context manager to test for warnings and their messages."""
 
     def __init__(self, warning_class, pattern, msg_fmt="{msg}"):
