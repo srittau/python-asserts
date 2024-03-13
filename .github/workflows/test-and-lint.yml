@@ -26,12 +26,12 @@ jobs:
         if: matrix.python-version >= 3.8
         run: |
           poetry run flake8 --version
-          poetry run flake8 --show-source --statistics asserts test_asserts.py
+          poetry run poe lint --show-source --statistics
       - name: Type checking with mypy
         run: |
           poetry run mypy --version
-          poetry run mypy asserts test_asserts.py
+          poetry run poe typecheck
       - name: Test with unittest
-        run: poetry run python -Wall -m unittest test_asserts
+        run: poetry run poe test
       - name: Run doctests
-        run: poetry run python -m doctest asserts/__init__.py
+        run: poetry run poe doctest
