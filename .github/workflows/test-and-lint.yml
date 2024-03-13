@@ -25,7 +25,7 @@ jobs:
       - name: Lint with ruff
         run: |
           poetry run ruff --version
-          poetry run poe lint --show-source --statistics
+          poetry run poe lint --output-format=full
       - name: Type checking with mypy
         run: |
           poetry run mypy --version
