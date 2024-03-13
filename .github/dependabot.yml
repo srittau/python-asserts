@@ -5,9 +5,23 @@ updates:
     schedule:
       interval: weekly
       time: '04:00'
-    versioning-strategy: lockfile-only
     groups:
       dependencies:
+        exclude-patterns:
+          - "mypy"
+          - "types-*"
         update-types:
           - "minor"
           - "patch"
+      mypy:
+        patterns:
+          - "mypy"
+      types:
+        patterns:
+          - "types-*"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: '04:00'
