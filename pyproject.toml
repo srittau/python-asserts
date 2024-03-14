@@ -16,6 +16,19 @@ classifiers = [
 packages = [{ include = "asserts" }]
 include = ["*/py.typed", "*.pyi"]
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 [tool.poetry.urls]
 "GitHub" = "https://github.com/srittau/python-asserts"
 "Bug Tracker" = "https://github.com/srittau/python-asserts/issues"
