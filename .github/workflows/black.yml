@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
     black:
+        name: Python 3.11
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
@@ -39,6 +40,7 @@ jobs:
                 version: 24.2.0
         
     old-python:
+        name: Python 3.10
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
