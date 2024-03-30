@@ -1,0 +1,45 @@
+name: Test srittau/black
+
+on: [push]
+
+jobs:
+    black:
+        runs-on: ubuntu-latest
+        continue-on-error: true
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.11"
+            - uses: srittau/black@action-pyproject  # default
+            - uses: srittau/black@action-pyproject  # fixed version
+              with:
+                version: 2024.2.0
+            - uses: srittau/black@action-pyproject  # pattern
+              with:
+                use_pyproject: false
+                version: ~=2024.*
+            - uses: srittau/black@action-pyproject  # pyproject
+              with:
+                use_pyproject: true
+            - uses: srittau/black@action-pyproject  # pyproject
+              with:
+                use_pyproject: on
+            - uses: srittau/black@action-pyproject  # error
+              with:
+                use_pyproject: true
+                version: 2024.2.0
+        
+    old-python:
+        runs-on: ubuntu-latest
+        continue-on-error: true
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.10"
+            - uses: srittau/black@action-pyproject
+              with:
+                use_pyproject: true
