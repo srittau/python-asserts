@@ -1,3 +1,10 @@
+[project]
+dependencies = [
+    "other ~= 1.2",
+    "black-xxx ~= 99",
+    "black ~= 24.2"
+]
+
 [tool.poetry]
 name = "asserts"
 version = "0.13.1.dev0"

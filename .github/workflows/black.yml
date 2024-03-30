@@ -26,16 +26,11 @@ jobs:
               with:
                 use_pyproject: false
                 version: ~=24.*
-            - name: Use pyproject.toml (true)
+            - name: Use pyproject.toml
               uses: srittau/black@dev
               continue-on-error: true
               with:
                 use_pyproject: true
-            - name: Use pyproject.toml (on)
-              uses: srittau/black@dev
-              continue-on-error: true
-              with:
-                use_pyproject: on
             - name: Use both
               uses: srittau/black@dev
               continue-on-error: true
