@@ -1,5 +1,5 @@
-[project]
-dependencies = [
+[project.optional-dependencies]
+dev = [
     "other ~= 1.2",
     "black-xxx ~= 99",
     "black ~= 24.2"
