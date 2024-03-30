@@ -12,26 +12,32 @@ jobs:
               uses: actions/setup-python@v5
               with:
                 python-version: "3.11"
-            - uses: srittau/black@dev  # default
+            - name: Default black version
+              uses: srittau/black@dev
               continue-on-error: true
-            - uses: srittau/black@dev  # fixed version
+            - name: Hardcode fixed version
+              uses: srittau/black@dev
               continue-on-error: true
               with:
                 version: 24.2.0
-            - uses: srittau/black@dev  # pattern
+            - name: Hardcode pattern
+              uses: srittau/black@dev
               continue-on-error: true
               with:
                 use_pyproject: false
                 version: ~=24.*
-            - uses: srittau/black@dev  # pyproject
+            - name: Use pyproject.toml (true)
+              uses: srittau/black@dev
               continue-on-error: true
               with:
                 use_pyproject: true
-            - uses: srittau/black@dev  # pyproject
+            - name: Use pyproject.toml (on)
+              uses: srittau/black@dev
               continue-on-error: true
               with:
                 use_pyproject: on
-            - uses: srittau/black@dev  # error
+            - name: Use both
+              uses: srittau/black@dev
               continue-on-error: true
               with:
                 use_pyproject: true
@@ -45,11 +51,13 @@ jobs:
               uses: actions/setup-python@v5
               with:
                 python-version: "3.10"
-            - uses: srittau/black@dev  # fixed version
+            - name: Hardcode fixed version
+              uses: srittau/black@dev
               continue-on-error: true
               with:
                 version: 24.2.0
-            - uses: srittau/black@dev  # pyproject
+            - name: Use pyproject.toml
+              uses: srittau/black@dev
               continue-on-error: true
               with:
                 use_pyproject: true
