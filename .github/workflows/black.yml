@@ -15,17 +15,17 @@ jobs:
             - name: Default black version
               uses: srittau/black@dev
               continue-on-error: true
-            - name: Hardcode fixed version
+            - name: "version: 24.2.0"
               uses: srittau/black@dev
               continue-on-error: true
               with:
                 version: 24.2.0
-            - name: Hardcode pattern
+            - name: "version: ~=24.2"
               uses: srittau/black@dev
               continue-on-error: true
               with:
                 use_pyproject: false
-                version: ~=24.*
+                version: ~=24.2
             - name: Use pyproject.toml
               uses: srittau/black@dev
               continue-on-error: true
