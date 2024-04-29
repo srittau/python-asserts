@@ -3,7 +3,7 @@
 import re
 import sys
 from collections import OrderedDict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from json import JSONDecodeError
 from unittest import TestCase
 from warnings import catch_warnings, simplefilter, warn
@@ -934,7 +934,9 @@ class AssertTest(TestCase):
     # assert_datetime_about_now_utc()
 
     def test_assert_datetime_about_now_utc__close(self):
-        assert_datetime_about_now_utc(datetime.utcnow())
+        assert_datetime_about_now_utc(
+            datetime.now(timezone.utc).replace(tzinfo=None)
+        )
 
     def test_assert_datetime_about_now_utc__none__default_message(self):
         expected_message = r"^None is not a valid date/time$"
@@ -942,7 +944,7 @@ class AssertTest(TestCase):
             assert_datetime_about_now_utc(None)
 
     def test_assert_datetime_about_now_utc__none__custom_message(self):
-        dt = datetime.utcnow().date().isoformat()
+        dt = datetime.now(timezone.utc).date().isoformat()
         expected = "None is not a valid date/time;None;{}".format(dt)
         with _assert_raises_assertion(expected):
             assert_datetime_about_now_utc(
@@ -950,12 +952,16 @@ class AssertTest(TestCase):
             )
 
     def test_assert_datetime_about_now_utc__too_low(self):
-        then = datetime.utcnow() - timedelta(minutes=1)
+        then = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(
+            minutes=1
+        )
         with assert_raises(AssertionError):
             assert_datetime_about_now_utc(then)
 
     def test_assert_datetime_about_now_utc__too_high(self):
-        then = datetime.utcnow() + timedelta(minutes=1)
+        then = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(
+            minutes=1
+        )
         with assert_raises(AssertionError):
             assert_datetime_about_now_utc(then)
 
@@ -970,7 +976,7 @@ class AssertTest(TestCase):
 
     def test_assert_datetime_about_now_utc__custom_message(self):
         then = datetime(1990, 4, 13, 12, 30, 15)
-        now = datetime.utcnow().date().isoformat()
+        now = datetime.now(timezone.utc).date().isoformat()
         expected = (
             "datetime.datetime(1990, 4, 13, 12, 30, 15) "
             "is not close to current UTC date/time;12:30;{}".format(now)

@@ -4,6 +4,10 @@ python-asserts adheres to [semantic versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+Fixed Python 3.12 deprecation warnings.
+
 ## [0.13.0] – 2024-03-13
 
 ### Added

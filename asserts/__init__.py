@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import re
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from json import loads as json_loads
 from typing import Any, Callable, Set
 from warnings import WarningMessage, catch_warnings
@@ -845,7 +845,7 @@ def assert_datetime_about_now(actual, msg_fmt="{msg}"):
 def assert_datetime_about_now_utc(actual, msg_fmt="{msg}"):
     """Fail if a datetime object is not within 5 seconds of UTC.
 
-    >>> assert_datetime_about_now_utc(datetime.utcnow())
+    >>> assert_datetime_about_now_utc(datetime.now(datetime.UTC))
     >>> assert_datetime_about_now_utc(datetime(1900, 1, 1, 12, 0, 0))
     Traceback (most recent call last):
         ...
@@ -857,7 +857,7 @@ def assert_datetime_about_now_utc(actual, msg_fmt="{msg}"):
     * now - current datetime that was tested against
     """
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     if actual is None:
         msg = "None is not a valid date/time"
         fail(msg_fmt.format(msg=msg, actual=actual, now=now))
