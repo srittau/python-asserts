@@ -2,7 +2,9 @@
 
 python-asserts adheres to [semantic versioning](https://semver.org/).
 
-## [Unreleased]
+## UNRELEASED –
+
+## [0.13.1] – 2024-04-29
 
 ### Fixed
 

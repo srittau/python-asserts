@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "asserts"
-version = "0.13.1.dev0"
+version = "0.13.2.dev0"
 description = "Stand-alone Assertions"
 readme = "README.md"
 authors = ["Sebastian Rittau <srittau@rittau.biz>"]
