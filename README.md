@@ -4,7 +4,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/asserts)](https://pypi.python.org/pypi/asserts/)
 [![GitHub](https://img.shields.io/github/release/srittau/python-asserts/all.svg)](https://github.com/srittau/python-asserts/releases/)
 [![pypi](https://img.shields.io/pypi/v/asserts.svg)](https://pypi.python.org/pypi/asserts/)
-[![GitHub Actions](https://img.shields.io/github/workflow/status/srittau/python-asserts/Test%20and%20lint)](https://github.com/srittau/python-asserts/actions/workflows/test-and-lint.yml)
+[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/srittau/python-asserts/test-and-lint.yml)](https://github.com/srittau/python-asserts/actions/workflows/test-and-lint.yml)
 
 Stand-alone Assertions for Python
 
