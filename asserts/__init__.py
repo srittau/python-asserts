@@ -845,7 +845,7 @@ def assert_datetime_about_now(actual, msg_fmt="{msg}"):
 def assert_datetime_about_now_utc(actual, msg_fmt="{msg}"):
     """Fail if a datetime object is not within 5 seconds of UTC.
 
-    >>> assert_datetime_about_now_utc(datetime.now(datetime.UTC))
+    >>> assert_datetime_about_now_utc(datetime.now(timezone.utc).replace(tzinfo=None))
     >>> assert_datetime_about_now_utc(datetime(1900, 1, 1, 12, 0, 0))
     Traceback (most recent call last):
         ...
