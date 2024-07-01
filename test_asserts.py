@@ -80,7 +80,7 @@ def _assert_raises_assertion(expected_message):
         def __exit__(self, exc_type, exc_val, exc_tb):
             if exc_type is None:
                 raise AssertionError("no AssertionError raised")
-            if exc_type != AssertionError:
+            if not issubclass(exc_type, AssertionError):
                 return False
             if str(exc_val) != expected_message:
                 raise AssertionError(
