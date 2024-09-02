@@ -27,7 +27,7 @@ typing-extensions = "^4.10.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = ">=1.9,<1.12"
-poethepoet = ">=0.27.0,<0.28"
+poethepoet = ">=0.27.0,<0.29"
 ruff = ">=0.5.1,<0.7.0"
 
 [tool.ruff]
