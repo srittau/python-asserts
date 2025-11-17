@@ -293,4 +293,4 @@ dev = ["mypy", "poethepoet", "ruff"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">= 3.10"
-content-hash = "c4c9b20d8e2b08251b0f9ac1807d9e38106fecbc2e4054d1bbd6789a63fd3b56"
+content-hash = "2283d6bf64568d93021e34d97fcfd550db97a1e11369921d756080d30b96002c"
