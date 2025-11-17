@@ -468,7 +468,7 @@ class AssertTest(TestCase):
 
     def test_assert_dict_equal__custom_value_message(self):
         with _assert_raises_assertion(
-            "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};" "'foo';5;10"
+            "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};'foo';5;10"
         ):
             assert_dict_equal(
                 {"foo": 5},
@@ -514,18 +514,17 @@ class AssertTest(TestCase):
 
     def test_assert_dict_superset__custom_key_message(self):
         with _assert_raises_assertion(
-            "key 'foo' missing from right dict;"
-            "{'foo': ''};{'bar': ''};['foo']"
+            "key 'foo' missing from right dict;{'foo': ''};{'bar': ''};['foo']"
         ):
             assert_dict_superset(
                 {"foo": ""},
                 {"bar": ""},
-                key_msg_fmt="{msg};{first!r};{second!r};" "{missing_keys!r}",
+                key_msg_fmt="{msg};{first!r};{second!r};{missing_keys!r}",
             )
 
     def test_assert_dict_superset__custom_value_message(self):
         with _assert_raises_assertion(
-            "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};" "'foo';5;10"
+            "key 'foo' differs: 5 != 10;{'foo': 5};{'foo': 10};'foo';5;10"
         ):
             assert_dict_superset(
                 {"foo": 5},
@@ -606,8 +605,7 @@ class AssertTest(TestCase):
 
     def test_assert_regex__does_not_match_string__custom_message(self):
         with _assert_raises_assertion(
-            "'Wrong text' does not match 'not found';"
-            "'Wrong text';'not found'"
+            "'Wrong text' does not match 'not found';'Wrong text';'not found'"
         ):
             assert_regex(
                 "Wrong text", r"not found", "{msg};{text!r};{pattern!r}"
@@ -616,8 +614,7 @@ class AssertTest(TestCase):
     def test_assert_regex__does_not_match_regex__custom_message(self):
         regex = re.compile(r"not found")
         with _assert_raises_assertion(
-            "'Wrong text' does not match 'not found';'Wrong text';"
-            "'not found'"
+            "'Wrong text' does not match 'not found';'Wrong text';'not found'"
         ):
             assert_regex("Wrong text", regex, "{msg};{text!r};{pattern!r}")
 
