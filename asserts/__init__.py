@@ -819,8 +819,10 @@ def assert_has_attr(obj, attribute, msg_fmt="{msg}"):
 _EPSILON_SECONDS = 5
 
 
-def assert_datetime_about_now(actual, msg_fmt="{msg}"):
-    """Fail if a datetime object is not within 5 seconds of the local time.
+def assert_datetime_about_now(
+    actual: datetime | None, msg_fmt: str = "{msg}"
+) -> None:
+    """Fail if a naive datetime object is not within 5 seconds of the local time.
 
     >>> assert_datetime_about_now(datetime.now())
     >>> assert_datetime_about_now(datetime(1900, 1, 1, 12, 0, 0))
@@ -835,18 +837,25 @@ def assert_datetime_about_now(actual, msg_fmt="{msg}"):
     """
 
     now = datetime.now()
+
     if actual is None:
         msg = "None is not a valid date/time"
         fail(msg_fmt.format(msg=msg, actual=actual, now=now))
+    if actual.tzinfo is not None:
+        msg = f"expected naive datetime object, got {actual!r}"
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
+
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
     if not lower_bound <= actual <= upper_bound:
-        msg = "{!r} is not close to current date/time".format(actual)
+        msg = f"{actual!r} is not close to current date/time"
         fail(msg_fmt.format(msg=msg, actual=actual, now=now))
 
 
-def assert_datetime_about_now_utc(actual, msg_fmt="{msg}"):
-    """Fail if a datetime object is not within 5 seconds of UTC.
+def assert_datetime_about_now_utc(
+    actual: datetime | None, msg_fmt: str = "{msg}"
+) -> None:
+    """Fail if a naive datetime object is not within 5 seconds of UTC.
 
     >>> assert_datetime_about_now_utc(datetime.now(timezone.utc).replace(tzinfo=None))
     >>> assert_datetime_about_now_utc(datetime(1900, 1, 1, 12, 0, 0))
@@ -861,13 +870,18 @@ def assert_datetime_about_now_utc(actual, msg_fmt="{msg}"):
     """
 
     now = datetime.now(timezone.utc).replace(tzinfo=None)
+
     if actual is None:
         msg = "None is not a valid date/time"
         fail(msg_fmt.format(msg=msg, actual=actual, now=now))
+    if actual.tzinfo is not None:
+        msg = f"expected naive datetime object, got {actual!r}"
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
+
     lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
     upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
     if not lower_bound <= actual <= upper_bound:
-        msg = "{!r} is not close to current UTC date/time".format(actual)
+        msg = f"{actual!r} is not close to current UTC date/time"
         fail(msg_fmt.format(msg=msg, actual=actual, now=now))
 
 
@@ -912,7 +926,9 @@ class AssertRaisesContext(Generic[_E]):
         self.msg_fmt = msg_fmt
         self._exc_type = exception
         self._exc_val: _E | None = None
-        self._exception_name: str = getattr(exception, "__name__", str(exception))
+        self._exception_name: str = getattr(
+            exception, "__name__", str(exception)
+        )
         self._tests: list[Callable[[_E], object]] = []
 
     def __enter__(self) -> Self:

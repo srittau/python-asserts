@@ -881,6 +881,11 @@ class AssertTest(TestCase):
 
     # assert_datetime_about_now()
 
+    def test_assert_datetime_about_now__aware_dt(self):
+        expected_message = "^expected naive datetime object, got "
+        with assert_raises_regex(AssertionError, expected_message):
+            assert_datetime_about_now(datetime.now(timezone.utc))
+
     def test_assert_datetime_about_now__close(self):
         assert_datetime_about_now(datetime.now())
 
@@ -929,6 +934,11 @@ class AssertTest(TestCase):
             )
 
     # assert_datetime_about_now_utc()
+
+    def test_assert_datetime_about_now_utc__aware_dt(self):
+        expected_message = "^expected naive datetime object, got "
+        with assert_raises_regex(AssertionError, expected_message):
+            assert_datetime_about_now_utc(datetime.now(timezone.utc))
 
     def test_assert_datetime_about_now_utc__close(self):
         assert_datetime_about_now_utc(

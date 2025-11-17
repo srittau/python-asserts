@@ -10,6 +10,8 @@ python-asserts adheres to [semantic versioning](https://semver.org/).
 
 ### Changed
 
+- Fail with `AssertionError`, not `TypeError`, if a timezone-aware datetime is
+  passed to `assert_datetime_about_now()` or `assert_datetime_about_now_utc()`.
 - Modernize type annotations.
 
 ### Removed
