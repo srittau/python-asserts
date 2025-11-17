@@ -24,15 +24,18 @@ from __future__ import annotations
 
 import re
 import sys
+from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 from json import loads as json_loads
-from typing import Any, Callable, Set
+from typing import Generic, NoReturn, TypeVar, cast
 from warnings import WarningMessage, catch_warnings
 
-from typing_extensions import deprecated
+from typing_extensions import Self, deprecated
+
+_E = TypeVar("_E", bound=BaseException)
 
 
-def fail(msg=None):
+def fail(msg: str = "") -> NoReturn:
     """Raise an AssertionError with the given message.
 
     >>> fail("my message")
@@ -868,7 +871,7 @@ def assert_datetime_about_now_utc(actual, msg_fmt="{msg}"):
         fail(msg_fmt.format(msg=msg, actual=actual, now=now))
 
 
-class AssertRaisesContext:
+class AssertRaisesContext(Generic[_E]):
     """A context manager to test for exceptions with certain properties.
 
     When the context is left and no exception has been raised, an
@@ -904,36 +907,41 @@ class AssertRaisesContext:
 
     """
 
-    def __init__(self, exception, msg_fmt="{msg}"):
+    def __init__(self, exception: type[_E], msg_fmt: str = "{msg}") -> None:
         self.exception = exception
         self.msg_fmt = msg_fmt
         self._exc_type = exception
-        self._exc_val = None
-        self._exception_name = getattr(exception, "__name__", str(exception))
-        self._tests: list[Callable[[Any], object]] = []
+        self._exc_val: _E | None = None
+        self._exception_name: str = getattr(exception, "__name__", str(exception))
+        self._tests: list[Callable[[_E], object]] = []
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: object,
+    ) -> bool:
         if not exc_type or not exc_val:
-            msg = "{} not raised".format(self._exception_name)
+            msg = f"{self._exception_name} not raised"
             fail(self.format_message(msg))
-        self._exc_val = exc_val
         if not issubclass(exc_type, self.exception):
             return False
+        self._exc_val = cast(_E, exc_val)
         for test in self._tests:
-            test(exc_val)
+            test(self._exc_val)
         return True
 
-    def format_message(self, default_msg):
+    def format_message(self, default_msg: str) -> str:
         return self.msg_fmt.format(
             msg=default_msg,
             exc_type=self._exc_type,
             exc_name=self._exception_name,
         )
 
-    def add_test(self, cb: Callable[[Any], object]) -> None:
+    def add_test(self, cb: Callable[[_E], object]) -> None:
         """Add a test callback.
 
         This callback is called after determining that the right exception
@@ -944,7 +952,8 @@ class AssertRaisesContext:
         self._tests.append(cb)
 
     @property
-    def exc_val(self):
+    def exc_val(self) -> _E:
+        """The exception value that was raised within the context."""
         if self._exc_val is None:
             raise RuntimeError("must be called after leaving the context")
         return self._exc_val
@@ -1459,8 +1468,8 @@ class _JSONComparer:
                 self._assert_json_value_equals_with_item(name)
 
     @property
-    def _expected_key_names(self) -> Set[str]:
-        keys: Set[str] = set()
+    def _expected_key_names(self) -> set[str]:
+        keys: set[str] = set()
         for k in self._expected.keys():
             if isinstance(k, str):
                 if not _is_absent(self._expected[k]):

@@ -5,16 +5,15 @@ from re import Pattern
 from types import TracebackType
 from typing import Any, Generic, NoReturn, TypeVar
 
-from typing_extensions import deprecated
+from typing_extensions import Self, deprecated
 
 _E = TypeVar("_E", bound=BaseException)
-_S = TypeVar("_S")
 
 class AssertRaisesContext(Generic[_E]):
     exception: type[_E]
     msg_fmt: str
     def __init__(self, exception: type[_E], msg_fmt: str = ...) -> None: ...
-    def __enter__(self: _S) -> _S: ...
+    def __enter__(self) -> Self: ...
     def __exit__(
         self,
         exc_type: type[BaseException] | None,
@@ -24,7 +23,7 @@ class AssertRaisesContext(Generic[_E]):
     def format_message(self, default_msg: str) -> str: ...
     def add_test(self, cb: Callable[[_E], object]) -> None: ...
     @property
-    def exc_val(self) -> _E: ...
+    def exc_val(self) -> BaseException: ...
 
 class AssertRaisesErrnoContext(AssertRaisesContext[_E]):
     expected_errno: int
@@ -42,7 +41,7 @@ class AssertWarnsContext:
     def __init__(
         self, warning_class: type[Warning], msg_fmt: str = ...
     ) -> None: ...
-    def __enter__(self: _S) -> _S: ...
+    def __enter__(self) -> Self: ...
     def __exit__(
         self,
         exc_type: type[BaseException] | None,

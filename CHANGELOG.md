@@ -8,6 +8,10 @@ python-asserts adheres to [semantic versioning](https://semver.org/).
 
 - Add support for Python 3.13 and 3.14.
 
+### Changed
+
+- Modernize type annotations.
+
 ### Removed
 
 - Drop support for Python 3.8 and 3.9.
