@@ -21,7 +21,7 @@ dependencies = ["typing-extensions >= 4.10.0, < 5"]
 "Bug Tracker" = "https://github.com/srittau/python-asserts/issues"
 "Changes" = "https://github.com/srittau/python-asserts/blob/main/CHANGELOG.md"
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = ["mypy >= 1.14, < 1.15", "poethepoet", "ruff >= 0.14.0, < 0.15.0"]
 
 [tool.poetry]
