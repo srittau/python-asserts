@@ -819,6 +819,55 @@ def assert_has_attr(obj, attribute, msg_fmt="{msg}"):
 _EPSILON_SECONDS = 5
 
 
+def assert_datetime_now(
+    actual: datetime | None,
+    msg_fmt: str = "{msg}",
+    *,
+    check_utc: bool = False,
+) -> None:
+    """Fail if a timezone-aware datetime object is not close to the current time.
+
+    >>> assert_datetime_now(datetime.now(timezone.utc))
+    >>> assert_datetime_now(datetime(1900, 1, 1, 12, 0, 0, tzinfo=timezone.utc))
+    Traceback (most recent call last):
+        ...
+    AssertionError: datetime.datetime(1900, 1, 1, 12, 0, tzinfo=datetime.timezone.utc) is not close to current date/time
+
+    The datetime's 'tzinfo' is asserted to be UTC if the optional parameter
+    'check_utc' is set to True:
+
+    >>> import zoneinfo
+    >>> assert_datetime_now(datetime.now(timezone.utc), check_utc=True)
+    >>> assert_datetime_now(datetime(1900, 1, 1, 12, 0, 0, tzinfo=zoneinfo.ZoneInfo('Europe/Berlin')), check_utc=True)
+    Traceback (most recent call last):
+        ...
+    AssertionError: expected tzinfo of datetime.datetime(1900, 1, 1, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='Europe/Berlin')) to be UTC
+
+    The following msg_fmt arguments are supported:
+    * msg - the default error message
+    * actual - datetime object to check
+    * now - current datetime that was tested against
+    """
+
+    now = datetime.now(timezone.utc)
+
+    if actual is None:
+        msg = "None is not a valid date/time"
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
+    if actual.tzinfo is None:
+        msg = f"expected timezone-aware datetime object, got {actual!r}"
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
+    if check_utc and actual.tzinfo != timezone.utc:
+        msg = f"expected tzinfo of {actual!r} to be UTC"
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
+
+    lower_bound = now - timedelta(seconds=_EPSILON_SECONDS)
+    upper_bound = now + timedelta(seconds=_EPSILON_SECONDS)
+    if not lower_bound <= actual <= upper_bound:
+        msg = f"{actual!r} is not close to current date/time"
+        fail(msg_fmt.format(msg=msg, actual=actual, now=now))
+
+
 def assert_datetime_about_now(
     actual: datetime | None, msg_fmt: str = "{msg}"
 ) -> None:

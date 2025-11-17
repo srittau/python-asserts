@@ -2,6 +2,7 @@
 
 import re
 import sys
+import zoneinfo
 from collections import OrderedDict
 from datetime import datetime, timedelta, timezone
 from json import JSONDecodeError
@@ -19,6 +20,7 @@ from asserts import (
     assert_count_equal,
     assert_datetime_about_now,
     assert_datetime_about_now_utc,
+    assert_datetime_now,
     assert_dict_equal,
     assert_dict_superset,
     assert_equal,
@@ -878,6 +880,72 @@ class AssertTest(TestCase):
         expected = "<Dummy> does not have attribute 'foo';<Dummy>;foo"
         with _assert_raises_assertion(expected):
             assert_has_attr(d, "foo", msg_fmt="{msg};{obj!r};{attribute}")
+
+    # assert_datetime_now()
+
+    def test_assert_datetime_now__naive_dt(self):
+        expected_message = "^expected timezone-aware datetime object, got "
+        with assert_raises_regex(AssertionError, expected_message):
+            assert_datetime_now(datetime.now())
+
+    def test_assert_datetime_now__close(self):
+        assert_datetime_now(datetime.now(timezone.utc))
+        assert_datetime_now(datetime.now(zoneinfo.ZoneInfo("Europe/Berlin")))
+
+    def test_assert_datetime_now__none__default_message(self):
+        expected_message = r"^None is not a valid date/time$"
+        with assert_raises_regex(AssertionError, expected_message):
+            assert_datetime_now(None)
+
+    def test_assert_datetime_now__none__custom_message(self):
+        dt = datetime.now().date().isoformat()
+        expected = "None is not a valid date/time;None;{}".format(dt)
+        with _assert_raises_assertion(expected):
+            assert_datetime_now(
+                None, msg_fmt="{msg};{actual!r};{now:%Y-%m-%d}"
+            )
+
+    def test_assert_datetime_now__too_low(self):
+        then = datetime.now(timezone.utc) - timedelta(minutes=1)
+        with assert_raises(AssertionError):
+            assert_datetime_now(then)
+
+    def test_assert_datetime_now__too_high(self):
+        then = datetime.now(timezone.utc) + timedelta(minutes=1)
+        with assert_raises(AssertionError):
+            assert_datetime_now(then)
+
+    def test_assert_datetime_now__default_message(self):
+        then = datetime(1990, 4, 13, 12, 30, 15, tzinfo=timezone.utc)
+        expected_message = (
+            r"^datetime.datetime\(1990, 4, 13, 12, 30, 15, tzinfo=datetime.timezone.utc\) "
+            "is not close to current date/time$"
+        )
+        with assert_raises_regex(AssertionError, expected_message):
+            assert_datetime_now(then)
+
+    def test_assert_datetime_now__custom_message(self):
+        then = datetime(1990, 4, 13, 12, 30, 15, tzinfo=timezone.utc)
+        now = datetime.now().date().isoformat()
+        expected = (
+            "datetime.datetime(1990, 4, 13, 12, 30, 15, tzinfo=datetime.timezone.utc) "
+            f"is not close to current date/time;12:30;{now}"
+        )
+        with _assert_raises_assertion(expected):
+            assert_datetime_now(
+                then, msg_fmt="{msg};{actual:%H:%M};{now:%Y-%m-%d}"
+            )
+
+    def test_assert_datetime_now__check_utc(self):
+        assert_datetime_now(datetime.now(timezone.utc), check_utc=True)
+
+    def test_assert_datetime_now__check_utc_fail(self):
+        expected = r"^expected tzinfo of datetime.datetime\(.*\) to be UTC"
+        with assert_raises_regex(AssertionError, expected):
+            assert_datetime_now(
+                datetime.now(zoneinfo.ZoneInfo("Europe/Berlin")),
+                check_utc=True,
+            )
 
     # assert_datetime_about_now()
 

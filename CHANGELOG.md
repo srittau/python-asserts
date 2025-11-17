@@ -7,6 +7,7 @@ python-asserts adheres to [semantic versioning](https://semver.org/).
 ### Added
 
 - Add support for Python 3.13 and 3.14.
+- Add `assert_datetime_now()`.
 
 ### Changed
 
