@@ -19,13 +19,13 @@ python-asserts adheres to [semantic versioning](https://semver.org/).
 
 - Drop support for Python 3.8 and 3.9.
 
-## [0.13.1] – 2024-04-29
+## 0.13.1 – 2024-04-29
 
 ### Fixed
 
 Fixed Python 3.12 deprecation warnings.
 
-## [0.13.0] – 2024-03-13
+## 0.13.0 – 2024-03-13
 
 ### Added
 
@@ -41,7 +41,7 @@ Fixed Python 3.12 deprecation warnings.
 - Deprecate `Exists` in favor of `Present` and `Absent` in
   `assert_json_subset()`.
 
-## [0.12.0]
+## 0.12.0
 
 ### Added
 
@@ -55,7 +55,7 @@ Fixed Python 3.12 deprecation warnings.
 
 - Drop support for Python 3.6.
 
-## [0.11.1]
+## 0.11.1
 
 ### Added
 
@@ -64,13 +64,13 @@ Fixed Python 3.12 deprecation warnings.
 - Non-string (or `Exists`) object member names in the first argument to
   `assert_json_subset()` now raise a `TypeError`.
 
-## [0.11.0]
+## 0.11.0
 
 ### Removed
 
 - Drop support for Python 2.7 and 3.5.
 
-## [0.10.0]
+## 0.10.0
 
 ### Added
 
@@ -97,26 +97,26 @@ assert_equal("expected message", str(context.exc_val))
 
 - Drop support for Python 3.4.
 
-## [0.9.1]
+## 0.9.1
 
 ### Changed
 
 - `AssertRaisesContext` and sub-classes are now generic over the
   exception type.
 
-## [0.9.0]
+## 0.9.0
 
 ### Added
 
 - Add `assert_json_subset()`.
 
-## [0.8.6]
+## 0.8.6
 
 ### Added
 
 - Add support for Python 3.7 (contributed by Frank Niessink).
 
-## [0.8.5]
+## 0.8.5
 
 ### Added
 
@@ -127,7 +127,7 @@ assert_equal("expected message", str(context.exc_val))
 
 - `assert_equal()`: Use `assert_dict_equal()` if applicable.
 
-## [0.8.4]
+## 0.8.4
 
 ### Changed
 
@@ -137,25 +137,25 @@ assert_equal("expected message", str(context.exc_val))
 
 - Improve type annotations for Python 2.
 
-## [0.8.3]
+## 0.8.3
 
 ### Fixed
 
 - Fix type signature of `AssertRaisesContext.__exit__()`.
 
-## [0.8.2]
+## 0.8.2
 
 ### Added
 
 - Add a py.typed file to signal that this package supports type hints.
 
-## [0.8.1]
+## 0.8.1
 
 ### Fixed
 
 - `assert_raises_regex()`: Handle exceptions without any message correctly.
 
-## [0.8.0]
+## 0.8.0
 
 ### Added
 
@@ -174,7 +174,7 @@ assert_equal("expected message", str(context.exc_val))
 - assert_almost_equal(), assert_not_almost_equal(): Place msg_fmt as third
   argument.
 
-## [0.7.3]
+## 0.7.3
 
 ### Added
 
@@ -190,27 +190,27 @@ assert_equal("expected message", str(context.exc_val))
   second number was smaller than the first.
 - Use fail() instead of raise AssertionError in a few assertions.
 
-## [0.7.2]
+## 0.7.2
 
 ### Added
 
 - Add assert_warns() and assert_warns_regex().
 
-## [0.7.1]
+## 0.7.1
 
 ### Changed
 
 - Distribute a wheel.
 - asserts is now a package, instead of a module.
 
-## [0.7.0]
+## 0.7.0
 
 ### Added
 
 - Add a stub file.
 - Add assert_count_equal().
 
-## [0.6]
+## 0.6
 
 ### Added
 
@@ -223,12 +223,12 @@ assert_equal("expected message", str(context.exc_val))
 - assert_datetime_about_now()/assert_datetime_about_now_utc(): Handle
   comparison with None more gracefully.
 
-## [0.5.1]
+## 0.5.1
 
 ### Added
 
 - Add the LICENSE file to the distribution.
 
-## [0.5]
+## 0.5
 
 Initial release.
