@@ -3,7 +3,7 @@ name = "asserts"
 version = "0.13.2.dev0"
 description = "Stand-alone Assertions"
 readme = "README.md"
-authors = [{ name = "Sebastian Rittau", email = "srittau@rittau.biz" }]
+authors = [{ name = "Sebastian Rittau", email = "sebastian.rittau@zfutura.de" }]
 license = "MIT"
 classifiers = [
     "Development Status :: 3 - Alpha",
