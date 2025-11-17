@@ -1,6 +1,6 @@
 [project]
 name = "asserts"
-version = "0.13.2.dev0"
+version = "0.14.0.dev0"
 description = "Stand-alone Assertions"
 readme = "README.md"
 authors = [{ name = "Sebastian Rittau", email = "sebastian.rittau@zfutura.de" }]
@@ -11,7 +11,7 @@ classifiers = [
     "Topic :: Software Development :: Quality Assurance",
     "Topic :: Software Development :: Testing",
 ]
-requires-python = ">= 3.8.1"
+requires-python = ">= 3.10"
 dependencies = ["typing-extensions >= 4.10.0, < 5"]
 
 [project.urls]
@@ -34,7 +34,7 @@ include = ["*/py.typed", "*.pyi"]
 
 [tool.ruff]
 line-length = 79
-target-version = "py38"
+target-version = "py310"
 
 [tool.poe.tasks]
 test = "python3 -Wall -m unittest test_asserts"

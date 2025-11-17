@@ -4,6 +4,14 @@ python-asserts adheres to [semantic versioning](https://semver.org/).
 
 ## UNRELEASED –
 
+### Added
+
+- Add support for Python 3.13 and 3.14.
+
+### Removed
+
+- Drop support for Python 3.8 and 3.9.
+
 ## [0.13.1] – 2024-04-29
 
 ### Fixed
