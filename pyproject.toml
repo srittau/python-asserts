@@ -12,7 +12,7 @@ classifiers = [
     "Topic :: Software Development :: Testing",
 ]
 requires-python = ">= 3.10"
-dependencies = ["typing-extensions >= 4.10.0, < 5"]
+dependencies = ["typing-extensions >= 4.16.0, < 5"]
 
 [project.urls]
 "Homepage" = "https://github.com/srittau/python-asserts"
